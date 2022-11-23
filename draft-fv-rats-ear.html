@@ -1151,7 +1151,28 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
             <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
-            <p id="section-toc.1-1.3.1" class="keepWithNext"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-eat-attestation-result" class="internal xref">EAT Attestation Result</a></p>
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-eat-attestation-result" class="internal xref">EAT Attestation Result</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-json-serialisation" class="internal xref">JSON Serialisation</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1.2.1">
+                    <p id="section-toc.1-1.3.2.1.2.1.1" class="keepWithNext"><a href="#section-3.1.1" class="auto internal xref">3.1.1</a>.  <a href="#name-examples" class="internal xref">Examples</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-cbor-serialisation" class="internal xref">CBOR Serialisation</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.1">
+                    <p id="section-toc.1-1.3.2.2.2.1.1"><a href="#section-3.2.1" class="auto internal xref">3.2.1</a>.  <a href="#name-examples-2" class="internal xref">Examples</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-extensions" class="internal xref">Extensions</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
             <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
@@ -1197,16 +1218,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-eat-attestation-result" class="section-name selfRef">EAT Attestation Result</a>
       </h2>
 <div id="section-3-1">
-<pre class="breakable lang-cddl sourcecode">
-start = EAR
-
-$ar4si-trust-tier /= ar4si.trust-tier-none
-$ar4si-trust-tier /= ar4si.trust-tier-affirming
-$ar4si-trust-tier /= ar4si.trust-tier-warning
-$ar4si-trust-tier /= ar4si.trust-tier-contraindicated
-
-$ar4si-trustworthiness-claim = -128..127
-
+<pre class="lang-cddl sourcecode">
 EAR = {
   ear.status =&gt; $ar4si-trust-tier
   eat_profile =&gt; "tag:github.com,2022:veraison/ear"
@@ -1228,15 +1240,30 @@ ar4si-trustworthiness-vector = non-empty&lt;{
   ? sourced-data =&gt; $ar4si-trustworthiness-claim
 }&gt;
 
+$ar4si-trustworthiness-claim = -128..127
 
-non-empty&lt;M&gt; = (M) .within ({ + any =&gt; any })
+$ar4si-trust-tier /= ar4si.trust-tier-none
+$ar4si-trust-tier /= ar4si.trust-tier-affirming
+$ar4si-trust-tier /= ar4si.trust-tier-warning
+$ar4si-trust-tier /= ar4si.trust-tier-contraindicated
 
-
+; vim: set tw=70 ts=2 et:
+</pre><a href="#section-3-1" class="pilcrow">¶</a>
+</div>
+<div id="json-serialisation">
+<section id="section-3.1">
+        <h3 id="name-json-serialisation">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-json-serialisation" class="section-name selfRef">JSON Serialisation</a>
+        </h3>
+<div id="section-3.1-1">
+<pre class="lang-cddl sourcecode">
+; $ar4si-trust-tier
 ar4si.trust-tier-none = "none"
 ar4si.trust-tier-affirming = "affirming"
 ar4si.trust-tier-warning = "warning"
 ar4si.trust-tier-contraindicated = "contraindicated"
 
+; EAR (EAT Attestation Result)
 ear.status = "ear.status"
 ear.trustworthiness-vector = "ear.trustworthiness-vector"
 ear.raw-evidence = "ear.raw-evidence"
@@ -1244,6 +1271,7 @@ ear.appraisal-policy-id = "ear.appraisal-policy-id"
 eat_profile = "eat_profile"
 iat = "iat"
 
+; ar4si-trustworthiness-vector
 instance-identity = "instance-identity"
 configuration = "configuration"
 executables = "executables"
@@ -1253,12 +1281,120 @@ runtime-opaque = "runtime-opaque"
 storage-opaque = "storage-opaque"
 sourced-data = "sourced-data"
 
+; types
 numeric-date = ~time
 ear-bytes = text .regexp "[A-Za-z0-9_=-]+"
 ear-label = text
 
+; vim: set tw=70 ts=2 et:
+</pre><a href="#section-3.1-1" class="pilcrow">¶</a>
+</div>
+<div id="examples">
+<section id="section-3.1.1">
+          <h4 id="name-examples">
+<a href="#section-3.1.1" class="section-number selfRef">3.1.1. </a><a href="#name-examples" class="section-name selfRef">Examples</a>
+          </h4>
+<div id="section-3.1.1-1">
+<pre class="lang-cbor-diag sourcecode">
+{
+  "eat_profile": "tag:github.com,2022:veraison/ear",
+  "ear.status": "contraindicated",
+  "ear.trustworthiness-vector": {
+    "instance-identity": 32,
+    "configuration": 32,
+    "executables": 96,
+    "file-system": 0,
+    "hardware": 2,
+    "runtime-opaque": 0,
+    "storage-opaque": 0,
+    "sourced-data": 0
+  },
+  "ear.raw-evidence": "NzQ3MjY5NzM2NTYzNzQK",
+  "ear.appraisal-policy-id": "https://veraison.example/policy/1/60a0068d",
+  "iat": 1666529184
+}
+</pre><a href="#section-3.1.1-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="cbor-serialisation">
+<section id="section-3.2">
+        <h3 id="name-cbor-serialisation">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-cbor-serialisation" class="section-name selfRef">CBOR Serialisation</a>
+        </h3>
+<div id="section-3.2-1">
+<pre class="lang-cddl sourcecode">
+; $ar4si-trust-tier
+ar4si.trust-tier-none = 0
+ar4si.trust-tier-affirming = 2
+ar4si.trust-tier-warning = 32
+ar4si.trust-tier-contraindicated = 96
 
-</pre><a href="#section-3-1" class="pilcrow">¶</a>
+; EAR (EAT Attestation Result)
+ear.status = 1000
+ear.trustworthiness-vector = 1001
+ear.raw-evidence = 1002
+ear.appraisal-policy-id = 1003
+eat_profile = 265
+iat = 6
+
+; ar4si-trustworthiness-vector
+instance-identity = 0
+configuration = 1
+executables = 2
+file-system = 3
+hardware = 4
+runtime-opaque = 5
+storage-opaque = 6
+sourced-data = 7
+
+; types
+numeric-date = ~time
+ear-bytes = bytes
+ear-label = int / text
+
+; vim: set tw=70 ts=2 et:
+</pre><a href="#section-3.2-1" class="pilcrow">¶</a>
+</div>
+<div id="examples-1">
+<section id="section-3.2.1">
+          <h4 id="name-examples-2">
+<a href="#section-3.2.1" class="section-number selfRef">3.2.1. </a><a href="#name-examples-2" class="section-name selfRef">Examples</a>
+          </h4>
+<div id="section-3.2.1-1">
+<pre class="lang-cbor-diag sourcecode">
+{
+  265: "tag:github.com,2022:veraison/ear",
+  1000: 96,
+  1001: {
+    0: 32,
+    1: 32,
+    2: 96,
+    3: 0,
+    4: 2,
+    5: 0,
+    6: 0,
+    7: 0
+  },
+  1002: h'6C696665626F61746D616E',
+  1003: "https://veraison.example/policy/1/60a0068d",
+  6: 1666529184
+}
+</pre><a href="#section-3.2.1-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="extensions">
+<section id="section-3.3">
+        <h3 id="name-extensions">
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-extensions" class="section-name selfRef">Extensions</a>
+        </h3>
+<p id="section-3.3-1">TODO<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+</section>
 </div>
 </section>
 </div>

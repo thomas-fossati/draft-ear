@@ -69,6 +69,11 @@ Table of Contents
    1.  Introduction
    2.  Conventions and Definitions
    3.  EAT Attestation Result
+     3.1.  JSON Serialisation
+       3.1.1.  Examples
+     3.2.  CBOR Serialisation
+       3.2.1.  Examples
+     3.3.  Extensions
    4.  Security Considerations
    5.  IANA Considerations
    6.  Normative References
@@ -88,15 +93,6 @@ Table of Contents
    capitals, as shown here.
 
 3.  EAT Attestation Result
-
-   start = EAR
-
-   $ar4si-trust-tier /= ar4si.trust-tier-none
-   $ar4si-trust-tier /= ar4si.trust-tier-affirming
-   $ar4si-trust-tier /= ar4si.trust-tier-warning
-   $ar4si-trust-tier /= ar4si.trust-tier-contraindicated
-
-   $ar4si-trustworthiness-claim = -128..127
 
    EAR = {
      ear.status => $ar4si-trust-tier
@@ -119,15 +115,24 @@ Table of Contents
      ? sourced-data => $ar4si-trustworthiness-claim
    }>
 
+   $ar4si-trustworthiness-claim = -128..127
 
-   non-empty<M> = (M) .within ({ + any => any })
+   $ar4si-trust-tier /= ar4si.trust-tier-none
+   $ar4si-trust-tier /= ar4si.trust-tier-affirming
+   $ar4si-trust-tier /= ar4si.trust-tier-warning
+   $ar4si-trust-tier /= ar4si.trust-tier-contraindicated
 
+   ; vim: set tw=70 ts=2 et:
 
+3.1.  JSON Serialisation
+
+   ; $ar4si-trust-tier
    ar4si.trust-tier-none = "none"
    ar4si.trust-tier-affirming = "affirming"
    ar4si.trust-tier-warning = "warning"
    ar4si.trust-tier-contraindicated = "contraindicated"
 
+   ; EAR (EAT Attestation Result)
    ear.status = "ear.status"
    ear.trustworthiness-vector = "ear.trustworthiness-vector"
    ear.raw-evidence = "ear.raw-evidence"
@@ -135,6 +140,7 @@ Table of Contents
    eat_profile = "eat_profile"
    iat = "iat"
 
+   ; ar4si-trustworthiness-vector
    instance-identity = "instance-identity"
    configuration = "configuration"
    executables = "executables"
@@ -144,9 +150,89 @@ Table of Contents
    storage-opaque = "storage-opaque"
    sourced-data = "sourced-data"
 
+   ; types
    numeric-date = ~time
    ear-bytes = text .regexp "[A-Za-z0-9_=-]+"
    ear-label = text
+
+   ; vim: set tw=70 ts=2 et:
+
+3.1.1.  Examples
+
+   {
+     "eat_profile": "tag:github.com,2022:veraison/ear",
+     "ear.status": "contraindicated",
+     "ear.trustworthiness-vector": {
+       "instance-identity": 32,
+       "configuration": 32,
+       "executables": 96,
+       "file-system": 0,
+       "hardware": 2,
+       "runtime-opaque": 0,
+       "storage-opaque": 0,
+       "sourced-data": 0
+     },
+     "ear.raw-evidence": "NzQ3MjY5NzM2NTYzNzQK",
+     "ear.appraisal-policy-id": "https://veraison.example/policy/1/60a0068d",
+     "iat": 1666529184
+   }
+
+3.2.  CBOR Serialisation
+
+   ; $ar4si-trust-tier
+   ar4si.trust-tier-none = 0
+   ar4si.trust-tier-affirming = 2
+   ar4si.trust-tier-warning = 32
+   ar4si.trust-tier-contraindicated = 96
+
+   ; EAR (EAT Attestation Result)
+   ear.status = 1000
+   ear.trustworthiness-vector = 1001
+   ear.raw-evidence = 1002
+   ear.appraisal-policy-id = 1003
+   eat_profile = 265
+   iat = 6
+
+   ; ar4si-trustworthiness-vector
+   instance-identity = 0
+   configuration = 1
+   executables = 2
+   file-system = 3
+   hardware = 4
+   runtime-opaque = 5
+   storage-opaque = 6
+   sourced-data = 7
+
+   ; types
+   numeric-date = ~time
+   ear-bytes = bytes
+   ear-label = int / text
+
+   ; vim: set tw=70 ts=2 et:
+
+3.2.1.  Examples
+
+   {
+     265: "tag:github.com,2022:veraison/ear",
+     1000: 96,
+     1001: {
+       0: 32,
+       1: 32,
+       2: 96,
+       3: 0,
+       4: 2,
+       5: 0,
+       6: 0,
+       7: 0
+     },
+     1002: h'6C696665626F61746D616E',
+     1003: "https://veraison.example/policy/1/60a0068d",
+     6: 1666529184
+   }
+
+3.3.  Extensions
+
+   TODO
 
 4.  Security Considerations
 
