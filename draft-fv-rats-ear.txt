@@ -5,8 +5,8 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                               ARM Limited
 Intended status: Standards Track                                 E. Voit
-Expires: 26 May 2023                                               Cisco
-                                                        22 November 2022
+Expires: 27 May 2023                                               Cisco
+                                                        23 November 2022
 
 
                         EAT Attestation Results
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 May 2023.
+   This Internet-Draft will expire on 27 May 2023.
 
 Copyright Notice
 
@@ -68,9 +68,10 @@ Table of Contents
 
    1.  Introduction
    2.  Conventions and Definitions
-   3.  Security Considerations
-   4.  IANA Considerations
-   5.  Normative References
+   3.  EAT Attestation Result
+   4.  Security Considerations
+   5.  IANA Considerations
+   6.  Normative References
    Acknowledgments
    Authors' Addresses
 
@@ -86,15 +87,76 @@ Table of Contents
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-3.  Security Considerations
+3.  EAT Attestation Result
+
+   start = EAR
+
+   $ar4si-trust-tier /= ar4si.trust-tier-none
+   $ar4si-trust-tier /= ar4si.trust-tier-affirming
+   $ar4si-trust-tier /= ar4si.trust-tier-warning
+   $ar4si-trust-tier /= ar4si.trust-tier-contraindicated
+
+   $ar4si-trustworthiness-claim = -128..127
+
+   EAR = {
+     ear.status => $ar4si-trust-tier
+     eat_profile => "tag:github.com,2022:veraison/ear"
+     ? ear.trustworthiness-vector => ar4si-trustworthiness-vector
+     ? ear.raw-evidence => ear-bytes
+     iat => numeric-date
+     ? ear.appraisal-policy-id => text
+     * $$ear-extension
+   }
+
+   ar4si-trustworthiness-vector = non-empty<{
+     ? instance-identity => $ar4si-trustworthiness-claim
+     ? configuration => $ar4si-trustworthiness-claim
+     ? executables => $ar4si-trustworthiness-claim
+     ? file-system => $ar4si-trustworthiness-claim
+     ? hardware => $ar4si-trustworthiness-claim
+     ? runtime-opaque => $ar4si-trustworthiness-claim
+     ? storage-opaque => $ar4si-trustworthiness-claim
+     ? sourced-data => $ar4si-trustworthiness-claim
+   }>
+
+
+   non-empty<M> = (M) .within ({ + any => any })
+
+
+   ar4si.trust-tier-none = "none"
+   ar4si.trust-tier-affirming = "affirming"
+   ar4si.trust-tier-warning = "warning"
+   ar4si.trust-tier-contraindicated = "contraindicated"
+
+   ear.status = "ear.status"
+   ear.trustworthiness-vector = "ear.trustworthiness-vector"
+   ear.raw-evidence = "ear.raw-evidence"
+   ear.appraisal-policy-id = "ear.appraisal-policy-id"
+   eat_profile = "eat_profile"
+   iat = "iat"
+
+   instance-identity = "instance-identity"
+   configuration = "configuration"
+   executables = "executables"
+   file-system = "file-system"
+   hardware = "hardware"
+   runtime-opaque = "runtime-opaque"
+   storage-opaque = "storage-opaque"
+   sourced-data = "sourced-data"
+
+   numeric-date = ~time
+   ear-bytes = text .regexp "[A-Za-z0-9_=-]+"
+   ear-label = text
+
+4.  Security Considerations
 
    TODO Security
 
-4.  IANA Considerations
+5.  IANA Considerations
 
    This document has no IANA actions.
 
-5.  Normative References
+6.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
