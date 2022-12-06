@@ -3,10 +3,12 @@
 
 
 Remote ATtestation ProcedureS                                 T. Fossati
-Internet-Draft                                               ARM Limited
+Internet-Draft                                               Arm Limited
 Intended status: Standards Track                                 E. Voit
-Expires: 28 May 2023                                               Cisco
-                                                        24 November 2022
+Expires: 9 June 2023                                               Cisco
+                                                             S. Trofimov
+                                                             Arm Limited
+                                                         6 December 2022
 
 
                         EAT Attestation Results
@@ -60,7 +62,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 May 2023.
+   This Internet-Draft will expire on 9 June 2023.
 
 Copyright Notice
 
@@ -81,11 +83,13 @@ Table of Contents
    1.  Introduction
    2.  Conventions and Definitions
    3.  EAT Attestation Result
-     3.1.  JSON Serialisation
-       3.1.1.  Examples
-     3.2.  CBOR Serialisation
-       3.2.1.  Examples
-     3.3.  Extensions
+     3.1.  Trustworthiness Vector
+     3.2.  Trust Tiers
+     3.3.  JSON Serialisation
+       3.3.1.  Examples
+     3.4.  CBOR Serialisation
+       3.4.1.  Examples
+     3.5.  Extensions
    4.  Implementation Status
      4.1.  github.com/veraison/ear
    5.  Security Considerations
@@ -141,6 +145,37 @@ Table of Contents
      * $$ear-extension
    }
 
+   The EAR claims-set is as follows:
+
+   ear.status (mandatory)
+      Overall appraisal status represented as the one of four
+      trustworthiness tiers.  It MUST be the "worst" ...
+
+   eat_profile (mandatory)
+      The EAT profile associated with the EAR claims-set.  It MUST be
+      tag:github.com,2022:veraison/ear.
+
+   ear.trustworthiness-vector (optional)
+      The AR4SI trustworthiness vector (Section 2.3.5 of
+      [I-D.ietf-rats-ar4si].  See Section 3.1 for the details.
+
+   ear.raw-evidence (optional)
+      The unabridged evidence submitted for appraisal.
+
+   iat (mandatory)
+      The time at which the EAR is issued.  See Section 4.1.6 of
+      [RFC7519]
+
+   ear.appraisal-policy-id (optional)
+      An identifier for the appraisal policy used to compute the
+      attestation result.
+
+   $$ear-extension (optional)
+      Any application- or deployment-specific extension.  It MUST be a
+      map.  See Section 3.5 for the details.
+
+3.1.  Trustworthiness Vector
+
    ar4si-trustworthiness-vector = non-empty<{
      ? instance-identity => $ar4si-trustworthiness-claim
      ? configuration => $ar4si-trustworthiness-claim
@@ -154,14 +189,14 @@ Table of Contents
 
    $ar4si-trustworthiness-claim = -128..127
 
+3.2.  Trust Tiers
+
    $ar4si-trust-tier /= ar4si.trust-tier-none
    $ar4si-trust-tier /= ar4si.trust-tier-affirming
    $ar4si-trust-tier /= ar4si.trust-tier-warning
    $ar4si-trust-tier /= ar4si.trust-tier-contraindicated
 
-   ; vim: set tw=70 ts=2 et:
-
-3.1.  JSON Serialisation
+3.3.  JSON Serialisation
 
    ; $ar4si-trust-tier
    ar4si.trust-tier-none = "none"
@@ -194,7 +229,7 @@ Table of Contents
 
    ; vim: set tw=70 ts=2 et:
 
-3.1.1.  Examples
+3.3.1.  Examples
 
    {
      "eat_profile": "tag:github.com,2022:veraison/ear",
@@ -214,7 +249,7 @@ Table of Contents
      "iat": 1666529184
    }
 
-3.2.  CBOR Serialisation
+3.4.  CBOR Serialisation
 
    ; $ar4si-trust-tier
    ar4si.trust-tier-none = 0
@@ -247,7 +282,7 @@ Table of Contents
 
    ; vim: set tw=70 ts=2 et:
 
-3.2.1.  Examples
+3.4.1.  Examples
 
    {
      265: "tag:github.com,2022:veraison/ear",
@@ -267,7 +302,7 @@ Table of Contents
      6: 1666529184
    }
 
-3.3.  Extensions
+3.5.  Extensions
 
    TODO
 
@@ -296,9 +331,9 @@ Table of Contents
 4.1.  github.com/veraison/ear
 
    The organization responsible for this implementation is Veraison, a
-   Confidential Computing Consortium (Linux Foundation) project.  The
-   software, hosted at https://github.com/veraison/ear, provides a
-   Golang package that allows encoding, decoding, signing and
+   Linux Foundation project hosted at the Confidential Computing
+   Consortium.  The software, hosted at https://github.com/veraison/ear,
+   provides a Golang package that allows encoding, decoding, signing and
    verification of EAR payloads together with a CLI (arc) to create,
    verify and visualize EARs on the command line.  The maturity level is
    currently alpha, and only the JWT serialization is implemented.  The
@@ -338,9 +373,9 @@ Table of Contents
    [I-D.ietf-rats-eat]
               Lundblade, L., Mandyam, G., O'Donoghue, J., and C.
               Wallace, "The Entity Attestation Token (EAT)", Work in
-              Progress, Internet-Draft, draft-ietf-rats-eat-17, 22
-              October 2022, <https://datatracker.ietf.org/doc/html/
-              draft-ietf-rats-eat-17>.
+              Progress, Internet-Draft, draft-ietf-rats-eat-18, 4
+              December 2022, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-rats-eat-18>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -389,10 +424,15 @@ Acknowledgments
 Authors' Addresses
 
    Thomas Fossati
-   ARM Limited
+   Arm Limited
    Email: thomas.fossati@arm.com
 
 
    Eric Voit
    Cisco
    Email: evoit@cisco.com
+
+
+   Sergei Trofimov
+   Arm Limited
+   Email: sergei.trofimov@arm.com
