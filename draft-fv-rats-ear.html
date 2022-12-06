@@ -1282,7 +1282,9 @@ appear in all capitals, as shown here.<a href="#section-2-3" class="pilcrow">¶<
       <h2 id="name-eat-attestation-result">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-eat-attestation-result" class="section-name selfRef">EAT Attestation Result</a>
       </h2>
-<div class="lang-cddl sourcecode" id="section-3-1">
+<p id="section-3-1">EAR is an EAT token which can be serialized as JWT <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span> or CWT <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">The EAR claims-set is as follows:<a href="#section-3-2" class="pilcrow">¶</a></p>
+<div class="lang-cddl sourcecode" id="section-3-3">
 <pre>
 EAR = {
   ear.status =&gt; $ar4si-trust-tier
@@ -1293,50 +1295,56 @@ EAR = {
   ? ear.appraisal-policy-id =&gt; text
   * $$ear-extension
 }
-</pre><a href="#section-3-1" class="pilcrow">¶</a>
+</pre><a href="#section-3-3" class="pilcrow">¶</a>
 </div>
-<p id="section-3-2">The EAR claims-set is as follows:<a href="#section-3-2" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlNewline" id="section-3-3">
-        <dt id="section-3-3.1">
+<p id="section-3-4">Where:<a href="#section-3-4" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlNewline" id="section-3-5">
+        <dt id="section-3-5.1">
 <code>ear.status</code> (mandatory)</dt>
-        <dd style="margin-left: 1.5em" id="section-3-3.2">
-          <p id="section-3-3.2.1">Overall appraisal status represented as the one of four trustworthiness tiers.  It <span class="bcp14">MUST</span> be the "worst" ...<a href="#section-3-3.2.1" class="pilcrow">¶</a></p>
+        <dd style="margin-left: 1.5em" id="section-3-5.2">
+          <p id="section-3-5.2.1">The overall appraisal status represented as one of the four trustworthiness tiers (<a href="#sec-trusttiers" class="auto internal xref">Section 3.2</a>).
+If the <code>ear.trustworthiness-vector</code> claim is also present, the value of this claim <span class="bcp14">MUST</span> be set to the tier corresponding to the worst trustworthiness claim across the entire trustworthiness vector.<a href="#section-3-5.2.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-3-3.3">
+<dt id="section-3-5.3">
 <code>eat_profile</code> (mandatory)</dt>
-        <dd style="margin-left: 1.5em" id="section-3-3.4">
-          <p id="section-3-3.4.1">The EAT profile associated with the EAR claims-set.  It <span class="bcp14">MUST</span> be <code>tag:github.com,2022:veraison/ear</code>.<a href="#section-3-3.4.1" class="pilcrow">¶</a></p>
+        <dd style="margin-left: 1.5em" id="section-3-5.4">
+          <p id="section-3-5.4.1">The EAT profile associated with the EAR claims-set.
+It <span class="bcp14">MUST</span> be <code>tag:github.com,2022:veraison/ear</code>.<a href="#section-3-5.4.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-3-3.5">
+<dt id="section-3-5.5">
 <code>ear.trustworthiness-vector</code> (optional)</dt>
-        <dd style="margin-left: 1.5em" id="section-3-3.6">
-          <p id="section-3-3.6.1">The AR4SI trustworthiness vector (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-03#section-2.3.5" class="relref">Section 2.3.5</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span>.  See <a href="#sec-tvector" class="auto internal xref">Section 3.1</a> for the details.<a href="#section-3-3.6.1" class="pilcrow">¶</a></p>
+        <dd style="margin-left: 1.5em" id="section-3-5.6">
+          <p id="section-3-5.6.1">The AR4SI trustworthiness vector providing the breakdown of the appraisal.
+See <a href="#sec-tvector" class="auto internal xref">Section 3.1</a> for the details.<a href="#section-3-5.6.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-3-3.7">
+<dt id="section-3-5.7">
 <code>ear.raw-evidence</code> (optional)</dt>
-        <dd style="margin-left: 1.5em" id="section-3-3.8">
-          <p id="section-3-3.8.1">The unabridged evidence submitted for appraisal.<a href="#section-3-3.8.1" class="pilcrow">¶</a></p>
+        <dd style="margin-left: 1.5em" id="section-3-5.8">
+          <p id="section-3-5.8.1">The unabridged evidence submitted for appraisal.<a href="#section-3-5.8.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-3-3.9">
+<dt id="section-3-5.9">
 <code>iat</code> (mandatory)</dt>
-        <dd style="margin-left: 1.5em" id="section-3-3.10">
-          <p id="section-3-3.10.1">The time at which the EAR is issued.  See <span><a href="https://rfc-editor.org/rfc/rfc7519#section-4.1.6" class="relref">Section 4.1.6</a> of [<a href="#RFC7519" class="cite xref">RFC7519</a>]</span><a href="#section-3-3.10.1" class="pilcrow">¶</a></p>
+        <dd style="margin-left: 1.5em" id="section-3-5.10">
+          <p id="section-3-5.10.1">The time at which the EAR is issued.
+See <span><a href="https://rfc-editor.org/rfc/rfc7519#section-4.1.6" class="relref">Section 4.1.6</a> of [<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>.<a href="#section-3-5.10.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-3-3.11">
+<dt id="section-3-5.11">
 <code>ear.appraisal-policy-id</code> (optional)</dt>
-        <dd style="margin-left: 1.5em" id="section-3-3.12">
-          <p id="section-3-3.12.1">An identifier for the appraisal policy used to compute the attestation result.<a href="#section-3-3.12.1" class="pilcrow">¶</a></p>
+        <dd style="margin-left: 1.5em" id="section-3-5.12">
+          <p id="section-3-5.12.1">An unique identifier of the appraisal policy used to compute the attestation result.<a href="#section-3-5.12.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-3-3.13">
+<dt id="section-3-5.13">
 <code>$$ear-extension</code> (optional)</dt>
-        <dd style="margin-left: 1.5em" id="section-3-3.14">
-          <p id="section-3-3.14.1">Any application- or deployment-specific extension.  It <span class="bcp14">MUST</span> be a map.  See <a href="#sec-extensions" class="auto internal xref">Section 3.5</a> for the details.<a href="#section-3-3.14.1" class="pilcrow">¶</a></p>
+        <dd style="margin-left: 1.5em" id="section-3-5.14">
+          <p id="section-3-5.14.1">Any application- or deployment-specific extension.
+An EAR extension <span class="bcp14">MUST</span> be a map.
+See <a href="#sec-extensions" class="auto internal xref">Section 3.5</a> for further details.<a href="#section-3-5.14.1" class="pilcrow">¶</a></p>
 </dd>
       <dd class="break"></dd>
 </dl>
@@ -1345,7 +1353,12 @@ EAR = {
         <h3 id="name-trustworthiness-vector">
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-trustworthiness-vector" class="section-name selfRef">Trustworthiness Vector</a>
         </h3>
-<div class="lang-cddl sourcecode" id="section-3.1-1">
+<p id="section-3.1-1">The <code>ar4si-trustworthiness-vector</code> claim is an embodiment of the AR4SI trustworthiness vector, see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-03#section-2.3.5" class="relref">Section 2.3.5</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span>.
+It contains an entry for each of the 8 AR4SI appraisal categories.
+The value of each entry is chosen in the -128..127 range according to the rules described in Sections <a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-03#section-2.3.3" class="relref">2.3.3</a> and <a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-03#section-2.3.4" class="relref">2.3.4</a> of <span>[<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span>.
+All categories are optional.
+A missing entry means that the verifier makes no claim about this specific appraisal facet because the category is not applicable to the submitted evidence.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<div class="lang-cddl sourcecode" id="section-3.1-2">
 <pre>
 ar4si-trustworthiness-vector = non-empty&lt;{
   ? instance-identity =&gt; $ar4si-trustworthiness-claim
@@ -1359,8 +1372,9 @@ ar4si-trustworthiness-vector = non-empty&lt;{
 }&gt;
 
 $ar4si-trustworthiness-claim = -128..127
-</pre><a href="#section-3.1-1" class="pilcrow">¶</a>
+</pre><a href="#section-3.1-2" class="pilcrow">¶</a>
 </div>
+<p id="section-3.1-3">NOTE: remove non-empty and allow {}?<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-trusttiers">
@@ -1368,13 +1382,15 @@ $ar4si-trustworthiness-claim = -128..127
         <h3 id="name-trust-tiers">
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-trust-tiers" class="section-name selfRef">Trust Tiers</a>
         </h3>
-<div class="lang-cddl sourcecode" id="section-3.2-1">
+<p id="section-3.2-1">The trust tier type represents one of the equivalency classes in which the <code>$ar4si-trustworthiness-claim</code> space is partitioned.
+See <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-03#section-2.3.2" class="relref">Section 2.3.2</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span> for the details.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<div class="lang-cddl sourcecode" id="section-3.2-2">
 <pre>
 $ar4si-trust-tier /= ar4si.trust-tier-none
 $ar4si-trust-tier /= ar4si.trust-tier-affirming
 $ar4si-trust-tier /= ar4si.trust-tier-warning
 $ar4si-trust-tier /= ar4si.trust-tier-contraindicated
-</pre><a href="#section-3.2-1" class="pilcrow">¶</a>
+</pre><a href="#section-3.2-2" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
