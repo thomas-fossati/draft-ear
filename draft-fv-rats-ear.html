@@ -1055,7 +1055,7 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Fossati, et al.</td>
-<td class="center">Expires 9 June 2023</td>
+<td class="center">Expires 10 June 2023</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1068,12 +1068,12 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-fv-rats-ear-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2022-12-06" class="published">6 December 2022</time>
+<time datetime="2022-12-07" class="published">7 December 2022</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2023-06-09">9 June 2023</time></dd>
+<dd class="expires"><time datetime="2023-06-10">10 June 2023</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1142,7 +1142,7 @@ It can be serialized and protected using either CWT or JWT.<a href="#section-abs
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 9 June 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 10 June 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1277,25 +1277,31 @@ described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</s
 appear in all capitals, as shown here.<a href="#section-2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="eat-attestation-result">
+<div id="sec-ear">
 <section id="section-3">
       <h2 id="name-eat-attestation-result">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-eat-attestation-result" class="section-name selfRef">EAT Attestation Result</a>
       </h2>
 <p id="section-3-1">EAR is an EAT token which can be serialized as JWT <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span> or CWT <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">The EAR claims-set is as follows:<a href="#section-3-2" class="pilcrow">¶</a></p>
-<div class="lang-cddl sourcecode" id="section-3-3">
+<span id="name-ear-cddl-definition"></span><div id="fig-cddl-ear">
+<figure id="figure-1">
+        <div class="lang-cddl sourcecode" id="section-3-3.1">
 <pre>
 EAR = {
-  ear.status =&gt; $ar4si-trust-tier
+  ear.status =&gt; $ar4si.trust-tier
   eat_profile =&gt; "tag:github.com,2022:veraison/ear"
-  ? ear.trustworthiness-vector =&gt; ar4si-trustworthiness-vector
+  ? ear.trustworthiness-vector =&gt; ar4si.trustworthiness-vector
   ? ear.raw-evidence =&gt; ear-bytes
-  iat =&gt; numeric-date
+  iat =&gt; int
   ? ear.appraisal-policy-id =&gt; text
   * $$ear-extension
 }
-</pre><a href="#section-3-3" class="pilcrow">¶</a>
+</pre>
+</div>
+<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
+<a href="#name-ear-cddl-definition" class="selfRef">EAR (CDDL Definition)</a>
+        </figcaption></figure>
 </div>
 <p id="section-3-4">Where:<a href="#section-3-4" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlNewline" id="section-3-5">
@@ -1309,8 +1315,8 @@ If the <code>ear.trustworthiness-vector</code> claim is also present, the value 
 <dt id="section-3-5.3">
 <code>eat_profile</code> (mandatory)</dt>
         <dd style="margin-left: 1.5em" id="section-3-5.4">
-          <p id="section-3-5.4.1">The EAT profile associated with the EAR claims-set.
-It <span class="bcp14">MUST</span> be <code>tag:github.com,2022:veraison/ear</code>.<a href="#section-3-5.4.1" class="pilcrow">¶</a></p>
+          <p id="section-3-5.4.1">The EAT profile (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-18#section-6" class="relref">Section 6</a> of [<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span>) associated with the EAR claims-set and encodings defined by this document.
+It <span class="bcp14">MUST</span> be the following tag URI (<span>[<a href="#RFC4151" class="cite xref">RFC4151</a>]</span>) <code>tag:github.com,2022:veraison/ear</code>.<a href="#section-3-5.4.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-3-5.5">
@@ -1330,7 +1336,7 @@ See <a href="#sec-tvector" class="auto internal xref">Section 3.1</a> for the de
 <code>iat</code> (mandatory)</dt>
         <dd style="margin-left: 1.5em" id="section-3-5.10">
           <p id="section-3-5.10.1">The time at which the EAR is issued.
-See <span><a href="https://rfc-editor.org/rfc/rfc7519#section-4.1.6" class="relref">Section 4.1.6</a> of [<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>.<a href="#section-3-5.10.1" class="pilcrow">¶</a></p>
+See <span><a href="https://rfc-editor.org/rfc/rfc7519#section-4.1.6" class="relref">Section 4.1.6</a> of [<a href="#RFC7519" class="cite xref">RFC7519</a>]</span> and <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-18#section-4.3.1" class="relref">Section 4.3.1</a> of [<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span> for the EAT-specific encoding restrictions (i.e., disallowing the floating point representation).<a href="#section-3-5.10.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-3-5.11">
@@ -1353,28 +1359,34 @@ See <a href="#sec-extensions" class="auto internal xref">Section 3.5</a> for fur
         <h3 id="name-trustworthiness-vector">
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-trustworthiness-vector" class="section-name selfRef">Trustworthiness Vector</a>
         </h3>
-<p id="section-3.1-1">The <code>ar4si-trustworthiness-vector</code> claim is an embodiment of the AR4SI trustworthiness vector, see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-03#section-2.3.5" class="relref">Section 2.3.5</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span>.
-It contains an entry for each of the 8 AR4SI appraisal categories.
-The value of each entry is chosen in the -128..127 range according to the rules described in Sections <a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-03#section-2.3.3" class="relref">2.3.3</a> and <a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-03#section-2.3.4" class="relref">2.3.4</a> of <span>[<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span>.
-All categories are optional.
-A missing entry means that the verifier makes no claim about this specific appraisal facet because the category is not applicable to the submitted evidence.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<div class="lang-cddl sourcecode" id="section-3.1-2">
+<p id="section-3.1-1">The <code>ar4si-trustworthiness-vector</code> claim is an embodiment of the AR4SI trustworthiness vector (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-03#section-2.3.5" class="relref">Section 2.3.5</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span>) and it is defined as follows:<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<span id="name-trustworthiness-vector-cddl"></span><div id="fig-cddl-tvec">
+<figure id="figure-2">
+          <div class="lang-cddl sourcecode" id="section-3.1-2.1">
 <pre>
-ar4si-trustworthiness-vector = non-empty&lt;{
-  ? instance-identity =&gt; $ar4si-trustworthiness-claim
-  ? configuration =&gt; $ar4si-trustworthiness-claim
-  ? executables =&gt; $ar4si-trustworthiness-claim
-  ? file-system =&gt; $ar4si-trustworthiness-claim
-  ? hardware =&gt; $ar4si-trustworthiness-claim
-  ? runtime-opaque =&gt; $ar4si-trustworthiness-claim
-  ? storage-opaque =&gt; $ar4si-trustworthiness-claim
-  ? sourced-data =&gt; $ar4si-trustworthiness-claim
+ar4si.trustworthiness-vector = non-empty&lt;{
+  ? instance-identity =&gt; $ar4si.trustworthiness-claim
+  ? configuration =&gt; $ar4si.trustworthiness-claim
+  ? executables =&gt; $ar4si.trustworthiness-claim
+  ? file-system =&gt; $ar4si.trustworthiness-claim
+  ? hardware =&gt; $ar4si.trustworthiness-claim
+  ? runtime-opaque =&gt; $ar4si.trustworthiness-claim
+  ? storage-opaque =&gt; $ar4si.trustworthiness-claim
+  ? sourced-data =&gt; $ar4si.trustworthiness-claim
 }&gt;
 
-$ar4si-trustworthiness-claim = -128..127
-</pre><a href="#section-3.1-2" class="pilcrow">¶</a>
+$ar4si.trustworthiness-claim = -128..127
+</pre>
 </div>
-<p id="section-3.1-3">NOTE: remove non-empty and allow {}?<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
+<a href="#name-trustworthiness-vector-cddl" class="selfRef">Trustworthiness Vector (CDDL Definition)</a>
+          </figcaption></figure>
+</div>
+<p id="section-3.1-3">It contains an entry for each one of the eight AR4SI appraisals that have been conducted on the submitted evidence (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-03#section-2.3.4" class="relref">Section 2.3.4</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span>).
+The value of each entry is chosen in the -128..127 range according to the rules described in Sections <a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-03#section-2.3.3" class="relref">2.3.3</a> and <a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-03#section-2.3.4" class="relref">2.3.4</a> of <span>[<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span>.
+All categories are optional.
+A missing entry means that the verifier makes no claim about this specific appraisal facet because the category is not applicable to the submitted evidence.
+As required by the <code>non-empty</code> macro, at least one entry <span class="bcp14">MUST</span> be present in the vector.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-trusttiers">
@@ -1383,14 +1395,21 @@ $ar4si-trustworthiness-claim = -128..127
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-trust-tiers" class="section-name selfRef">Trust Tiers</a>
         </h3>
 <p id="section-3.2-1">The trust tier type represents one of the equivalency classes in which the <code>$ar4si-trustworthiness-claim</code> space is partitioned.
-See <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-03#section-2.3.2" class="relref">Section 2.3.2</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span> for the details.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
-<div class="lang-cddl sourcecode" id="section-3.2-2">
+See <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-ar4si-03#section-2.3.2" class="relref">Section 2.3.2</a> of [<a href="#I-D.ietf-rats-ar4si" class="cite xref">I-D.ietf-rats-ar4si</a>]</span> for the details.
+The allowed values for the type are as follows:<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<span id="name-trustworthiness-tiers-cddl-"></span><div id="fig-cddl-ttiers">
+<figure id="figure-3">
+          <div class="lang-cddl sourcecode" id="section-3.2-2.1">
 <pre>
-$ar4si-trust-tier /= ar4si.trust-tier-none
-$ar4si-trust-tier /= ar4si.trust-tier-affirming
-$ar4si-trust-tier /= ar4si.trust-tier-warning
-$ar4si-trust-tier /= ar4si.trust-tier-contraindicated
-</pre><a href="#section-3.2-2" class="pilcrow">¶</a>
+$ar4si.trust-tier /= ar4si.trust-tier-none
+$ar4si.trust-tier /= ar4si.trust-tier-affirming
+$ar4si.trust-tier /= ar4si.trust-tier-warning
+$ar4si.trust-tier /= ar4si.trust-tier-contraindicated
+</pre>
+</div>
+<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
+<a href="#name-trustworthiness-tiers-cddl-" class="selfRef">Trustworthiness Tiers (CDDL Definition)</a>
+          </figcaption></figure>
 </div>
 </section>
 </div>
@@ -1399,15 +1418,16 @@ $ar4si-trust-tier /= ar4si.trust-tier-contraindicated
         <h3 id="name-json-serialisation">
 <a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-json-serialisation" class="section-name selfRef">JSON Serialisation</a>
         </h3>
-<div class="lang-cddl sourcecode" id="section-3.3-1">
+<p id="section-3.3-1">To serialize the EAR claims-set in JSON format, the following substitutions are applied to the encoding-agnostic CDDL definitions in <a href="#sec-ear" class="auto internal xref">Section 3</a>, <a href="#sec-tvector" class="auto internal xref">Section 3.1</a> and <a href="#sec-trusttiers" class="auto internal xref">Section 3.2</a>:<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<div class="lang-cddl sourcecode" id="section-3.3-2">
 <pre>
-; $ar4si-trust-tier
+; $ar4si.trust-tier choice
 ar4si.trust-tier-none = "none"
 ar4si.trust-tier-affirming = "affirming"
 ar4si.trust-tier-warning = "warning"
 ar4si.trust-tier-contraindicated = "contraindicated"
 
-; EAR (EAT Attestation Result)
+; EAR JWT claims
 ear.status = "ear.status"
 ear.trustworthiness-vector = "ear.trustworthiness-vector"
 ear.raw-evidence = "ear.raw-evidence"
@@ -1415,7 +1435,7 @@ ear.appraisal-policy-id = "ear.appraisal-policy-id"
 eat_profile = "eat_profile"
 iat = "iat"
 
-; ar4si-trustworthiness-vector
+; ar4si.trustworthiness-vector
 instance-identity = "instance-identity"
 configuration = "configuration"
 executables = "executables"
@@ -1425,26 +1445,27 @@ runtime-opaque = "runtime-opaque"
 storage-opaque = "storage-opaque"
 sourced-data = "sourced-data"
 
-; types
-numeric-date = ~time
+; JSON types mapping
 ear-bytes = text .regexp "[A-Za-z0-9_=-]+"
 ear-label = text
-
-; vim: set tw=70 ts=2 et:
-</pre><a href="#section-3.3-1" class="pilcrow">¶</a>
+</pre><a href="#section-3.3-2" class="pilcrow">¶</a>
 </div>
 <div id="examples">
 <section id="section-3.3.1">
           <h4 id="name-examples">
 <a href="#section-3.3.1" class="section-number selfRef">3.3.1. </a><a href="#name-examples" class="section-name selfRef">Examples</a>
           </h4>
-<div class="lang-cbor-diag sourcecode" id="section-3.3.1-1">
+<p id="section-3.3.1-1">The example in <a href="#fig-ex-json-1" class="auto internal xref">Figure 4</a> shows an EAR claims-set corresponding to a "contraindicated" appraisal, meaning the verifier has found some problems with the attester's state reported in the submitted evidence.
+Specifically, the identified issue is related to unauthorized code or configuration loaded in runtime memory (i.e., value 96 in the executables category).<a href="#section-3.3.1-1" class="pilcrow">¶</a></p>
+<span id="name-json-claims-set-contraindic"></span><div id="fig-ex-json-1">
+<figure id="figure-4">
+            <div class="lang-cbor-diag sourcecode" id="section-3.3.1-2.1">
 <pre>
 {
   "eat_profile": "tag:github.com,2022:veraison/ear",
   "ear.status": "contraindicated",
   "ear.trustworthiness-vector": {
-    "instance-identity": 32,
+    "instance-identity": 2,
     "configuration": 32,
     "executables": 96,
     "file-system": 0,
@@ -1457,7 +1478,48 @@ ear-label = text
   "ear.appraisal-policy-id": "https://veraison.example/policy/1/60a0068d",
   "iat": 1666529184
 }
-</pre><a href="#section-3.3.1-1" class="pilcrow">¶</a>
+</pre>
+</div>
+<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
+<a href="#name-json-claims-set-contraindic" class="selfRef">JSON claims-set: contraindicated appraisal</a>
+            </figcaption></figure>
+</div>
+<p id="section-3.3.1-3">The breakdown of the trustworthiness vector is as follows:<a href="#section-3.3.1-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.3.1-4.1">Instance Identity (affirming): recognized and not compromised<a href="#section-3.3.1-4.1" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-3.3.1-4.2">Configuration (warning): known vulnerabilities<a href="#section-3.3.1-4.2" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-3.3.1-4.3">Executables (contraindicated): contraindicated run-time<a href="#section-3.3.1-4.3" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-3.3.1-4.4">File System (none): no claim being made<a href="#section-3.3.1-4.4" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-3.3.1-4.5">Hardware (affirming): genuine<a href="#section-3.3.1-4.5" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-3.3.1-4.6">Runtime Opaque (none): no claim being made<a href="#section-3.3.1-4.6" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-3.3.1-4.7">Storage Opaque (none): no claim being made<a href="#section-3.3.1-4.7" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-3.3.1-4.8">Sourced Data (none): no claim being made<a href="#section-3.3.1-4.8" class="pilcrow">¶</a>
+</li>
+          </ul>
+<p id="section-3.3.1-5">The example in <a href="#fig-ex-json-2" class="auto internal xref">Figure 5</a> is a minimalist (successful) attestation result that doesn't carry a trustworthiness vector.<a href="#section-3.3.1-5" class="pilcrow">¶</a></p>
+<span id="name-json-claims-set-simple-affi"></span><div id="fig-ex-json-2">
+<figure id="figure-5">
+            <div class="lang-cbor-diag sourcecode" id="section-3.3.1-6.1">
+<pre>
+{
+  "eat_profile": "tag:github.com,2022:veraison/ear",
+  "ear.status": "affirming",
+  "ear.raw-evidence": "b2tva29rb2tva29rb2sK",
+  "ear.appraisal-policy-id": "https://veraison.example/policy/1/60a0068d",
+  "iat": 1666529310
+}
+</pre>
+</div>
+<figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
+<a href="#name-json-claims-set-simple-affi" class="selfRef">JSON claims-set: simple affirming appraisal</a>
+            </figcaption></figure>
 </div>
 </section>
 </div>
@@ -1470,13 +1532,13 @@ ear-label = text
         </h3>
 <div class="lang-cddl sourcecode" id="section-3.4-1">
 <pre>
-; $ar4si-trust-tier
+; $ar4si.trust-tier code-points
 ar4si.trust-tier-none = 0
 ar4si.trust-tier-affirming = 2
 ar4si.trust-tier-warning = 32
 ar4si.trust-tier-contraindicated = 96
 
-; EAR (EAT Attestation Result)
+; EAR claims keys
 ear.status = 1000
 ear.trustworthiness-vector = 1001
 ear.raw-evidence = 1002
@@ -1484,7 +1546,7 @@ ear.appraisal-policy-id = 1003
 eat_profile = 265
 iat = 6
 
-; ar4si-trustworthiness-vector
+; ar4si.trustworthiness-vector keys
 instance-identity = 0
 configuration = 1
 executables = 2
@@ -1494,12 +1556,9 @@ runtime-opaque = 5
 storage-opaque = 6
 sourced-data = 7
 
-; types
-numeric-date = ~time
+; CBOR type mappings
 ear-bytes = bytes
 ear-label = int / text
-
-; vim: set tw=70 ts=2 et:
 </pre><a href="#section-3.4-1" class="pilcrow">¶</a>
 </div>
 <div id="examples-1">
@@ -1549,19 +1608,22 @@ ear-label = int / text
       </h2>
 <p id="section-4-1">This section records the status of known implementations of the protocol
 defined by this specification at the time of posting of this Internet-Draft,
-and is based on a proposal described in <span>[<a href="#RFC7942" class="cite xref">RFC7942</a>]</span>.  The description of
-implementations in this section is intended to assist the IETF in its decision
-processes in progressing drafts to RFCs.  Please note that the listing of any
-individual implementation here does not imply endorsement by the IETF.
+and is based on a proposal described in <span>[<a href="#RFC7942" class="cite xref">RFC7942</a>]</span>.
+The description of implementations in this section is intended to assist the
+IETF in its decision processes in progressing drafts to RFCs.
+Please note that the listing of any individual implementation here does not
+imply endorsement by the IETF.
 Furthermore, no effort has been spent to verify the information presented here
-that was supplied by IETF contributors.  This is not intended as, and must not
-be construed to be, a catalog of available implementations or their features.
+that was supplied by IETF contributors.
+This is not intended as, and must not be construed to be, a catalog of
+available implementations or their features.
 Readers are advised to note that other implementations may exist.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<p id="section-4-2">According to <span>[<a href="#RFC7942" class="cite xref">RFC7942</a>]</span>, "this will allow reviewers and working groups to assign
-due consideration to documents that have the benefit of running code, which may
-serve as evidence of valuable experimentation and feedback that have made the
-implemented protocols more mature.  It is up to the individual working groups
-to use this information as they see fit".<a href="#section-4-2" class="pilcrow">¶</a></p>
+<p id="section-4-2">According to <span>[<a href="#RFC7942" class="cite xref">RFC7942</a>]</span>, "this will allow reviewers and working groups to
+assign due consideration to documents that have the benefit of running code,
+which may serve as evidence of valuable experimentation and feedback that have
+made the implemented protocols more mature.
+It is up to the individual working groups to use this information as they see
+fit".<a href="#section-4-2" class="pilcrow">¶</a></p>
 <div id="githubcomveraisonear">
 <section id="section-4.1">
         <h3 id="name-githubcom-veraison-ear">
@@ -1655,6 +1717,10 @@ The package is used by the Veraison verifier to produce attestation results.<a h
 <a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
+<dt id="RFC4151">[RFC4151]</dt>
+        <dd>
+<span class="refAuthor">Kindberg, T.</span> and <span class="refAuthor">S. Hawke</span>, <span class="refTitle">"The 'tag' URI Scheme"</span>, <span class="seriesInfo">RFC 4151</span>, <span class="seriesInfo">DOI 10.17487/RFC4151</span>, <time datetime="2005-10" class="refDate">October 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4151">https://www.rfc-editor.org/rfc/rfc4151</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC7942">[RFC7942]</dt>
       <dd>
 <span class="refAuthor">Sheffer, Y.</span> and <span class="refAuthor">A. Farrel</span>, <span class="refTitle">"Improving Awareness of Running Code: The Implementation Status Section"</span>, <span class="seriesInfo">BCP 205</span>, <span class="seriesInfo">RFC 7942</span>, <span class="seriesInfo">DOI 10.17487/RFC7942</span>, <time datetime="2016-07" class="refDate">July 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7942">https://www.rfc-editor.org/rfc/rfc7942</a>&gt;</span>. </dd>

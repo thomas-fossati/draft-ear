@@ -5,10 +5,10 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                               Arm Limited
 Intended status: Standards Track                                 E. Voit
-Expires: 9 June 2023                                               Cisco
+Expires: 10 June 2023                                              Cisco
                                                              S. Trofimov
                                                              Arm Limited
-                                                         6 December 2022
+                                                         7 December 2022
 
 
                         EAT Attestation Results
@@ -62,7 +62,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 June 2023.
+   This Internet-Draft will expire on 10 June 2023.
 
 Copyright Notice
 
@@ -141,14 +141,16 @@ Table of Contents
    The EAR claims-set is as follows:
 
    EAR = {
-     ear.status => $ar4si-trust-tier
+     ear.status => $ar4si.trust-tier
      eat_profile => "tag:github.com,2022:veraison/ear"
-     ? ear.trustworthiness-vector => ar4si-trustworthiness-vector
+     ? ear.trustworthiness-vector => ar4si.trustworthiness-vector
      ? ear.raw-evidence => ear-bytes
-     iat => numeric-date
+     iat => int
      ? ear.appraisal-policy-id => text
      * $$ear-extension
    }
+
+                      Figure 1: EAR (CDDL Definition)
 
    Where:
 
@@ -160,7 +162,9 @@ Table of Contents
       across the entire trustworthiness vector.
 
    eat_profile (mandatory)
-      The EAT profile associated with the EAR claims-set.  It MUST be
+      The EAT profile (Section 6 of [I-D.ietf-rats-eat]) associated with
+      the EAR claims-set and encodings defined by this document.  It
+      MUST be the following tag URI ([RFC4151])
       tag:github.com,2022:veraison/ear.
 
    ear.trustworthiness-vector (optional)
@@ -172,7 +176,9 @@ Table of Contents
 
    iat (mandatory)
       The time at which the EAR is issued.  See Section 4.1.6 of
-      [RFC7519].
+      [RFC7519] and Section 4.3.1 of [I-D.ietf-rats-eat] for the EAT-
+      specific encoding restrictions (i.e., disallowing the floating
+      point representation).
 
    ear.appraisal-policy-id (optional)
       An unique identifier of the appraisal policy used to compute the
@@ -185,50 +191,61 @@ Table of Contents
 3.1.  Trustworthiness Vector
 
    The ar4si-trustworthiness-vector claim is an embodiment of the AR4SI
-   trustworthiness vector, see Section 2.3.5 of [I-D.ietf-rats-ar4si].
-   It contains an entry for each of the 8 AR4SI appraisal categories.
-   The value of each entry is chosen in the -128..127 range according to
-   the rules described in Sections 2.3.3 and 2.3.4 of
-   [I-D.ietf-rats-ar4si].  All categories are optional.  A missing entry
-   means that the verifier makes no claim about this specific appraisal
-   facet because the category is not applicable to the submitted
-   evidence.
+   trustworthiness vector (Section 2.3.5 of [I-D.ietf-rats-ar4si]) and
+   it is defined as follows:
 
-   ar4si-trustworthiness-vector = non-empty<{
-     ? instance-identity => $ar4si-trustworthiness-claim
-     ? configuration => $ar4si-trustworthiness-claim
-     ? executables => $ar4si-trustworthiness-claim
-     ? file-system => $ar4si-trustworthiness-claim
-     ? hardware => $ar4si-trustworthiness-claim
-     ? runtime-opaque => $ar4si-trustworthiness-claim
-     ? storage-opaque => $ar4si-trustworthiness-claim
-     ? sourced-data => $ar4si-trustworthiness-claim
+   ar4si.trustworthiness-vector = non-empty<{
+     ? instance-identity => $ar4si.trustworthiness-claim
+     ? configuration => $ar4si.trustworthiness-claim
+     ? executables => $ar4si.trustworthiness-claim
+     ? file-system => $ar4si.trustworthiness-claim
+     ? hardware => $ar4si.trustworthiness-claim
+     ? runtime-opaque => $ar4si.trustworthiness-claim
+     ? storage-opaque => $ar4si.trustworthiness-claim
+     ? sourced-data => $ar4si.trustworthiness-claim
    }>
 
-   $ar4si-trustworthiness-claim = -128..127
+   $ar4si.trustworthiness-claim = -128..127
 
-   NOTE: remove non-empty and allow {}?
+             Figure 2: Trustworthiness Vector (CDDL Definition)
+
+   It contains an entry for each one of the eight AR4SI appraisals that
+   have been conducted on the submitted evidence (Section 2.3.4 of
+   [I-D.ietf-rats-ar4si]).  The value of each entry is chosen in the
+   -128..127 range according to the rules described in Sections 2.3.3
+   and 2.3.4 of [I-D.ietf-rats-ar4si].  All categories are optional.  A
+   missing entry means that the verifier makes no claim about this
+   specific appraisal facet because the category is not applicable to
+   the submitted evidence.  As required by the non-empty macro, at least
+   one entry MUST be present in the vector.
 
 3.2.  Trust Tiers
 
    The trust tier type represents one of the equivalency classes in
    which the $ar4si-trustworthiness-claim space is partitioned.  See
-   Section 2.3.2 of [I-D.ietf-rats-ar4si] for the details.
+   Section 2.3.2 of [I-D.ietf-rats-ar4si] for the details.  The allowed
+   values for the type are as follows:
 
-   $ar4si-trust-tier /= ar4si.trust-tier-none
-   $ar4si-trust-tier /= ar4si.trust-tier-affirming
-   $ar4si-trust-tier /= ar4si.trust-tier-warning
-   $ar4si-trust-tier /= ar4si.trust-tier-contraindicated
+   $ar4si.trust-tier /= ar4si.trust-tier-none
+   $ar4si.trust-tier /= ar4si.trust-tier-affirming
+   $ar4si.trust-tier /= ar4si.trust-tier-warning
+   $ar4si.trust-tier /= ar4si.trust-tier-contraindicated
+
+             Figure 3: Trustworthiness Tiers (CDDL Definition)
 
 3.3.  JSON Serialisation
 
-   ; $ar4si-trust-tier
+   To serialize the EAR claims-set in JSON format, the following
+   substitutions are applied to the encoding-agnostic CDDL definitions
+   in Section 3, Section 3.1 and Section 3.2:
+
+   ; $ar4si.trust-tier choice
    ar4si.trust-tier-none = "none"
    ar4si.trust-tier-affirming = "affirming"
    ar4si.trust-tier-warning = "warning"
    ar4si.trust-tier-contraindicated = "contraindicated"
 
-   ; EAR (EAT Attestation Result)
+   ; EAR JWT claims
    ear.status = "ear.status"
    ear.trustworthiness-vector = "ear.trustworthiness-vector"
    ear.raw-evidence = "ear.raw-evidence"
@@ -236,7 +253,7 @@ Table of Contents
    eat_profile = "eat_profile"
    iat = "iat"
 
-   ; ar4si-trustworthiness-vector
+   ; ar4si.trustworthiness-vector
    instance-identity = "instance-identity"
    configuration = "configuration"
    executables = "executables"
@@ -246,20 +263,24 @@ Table of Contents
    storage-opaque = "storage-opaque"
    sourced-data = "sourced-data"
 
-   ; types
-   numeric-date = ~time
+   ; JSON types mapping
    ear-bytes = text .regexp "[A-Za-z0-9_=-]+"
    ear-label = text
 
-   ; vim: set tw=70 ts=2 et:
-
 3.3.1.  Examples
+
+   The example in Figure 4 shows an EAR claims-set corresponding to a
+   "contraindicated" appraisal, meaning the verifier has found some
+   problems with the attester's state reported in the submitted
+   evidence.  Specifically, the identified issue is related to
+   unauthorized code or configuration loaded in runtime memory (i.e.,
+   value 96 in the executables category).
 
    {
      "eat_profile": "tag:github.com,2022:veraison/ear",
      "ear.status": "contraindicated",
      "ear.trustworthiness-vector": {
-       "instance-identity": 32,
+       "instance-identity": 2,
        "configuration": 32,
        "executables": 96,
        "file-system": 0,
@@ -273,15 +294,48 @@ Table of Contents
      "iat": 1666529184
    }
 
+            Figure 4: JSON claims-set: contraindicated appraisal
+
+   The breakdown of the trustworthiness vector is as follows:
+
+   *  Instance Identity (affirming): recognized and not compromised
+
+   *  Configuration (warning): known vulnerabilities
+
+   *  Executables (contraindicated): contraindicated run-time
+
+   *  File System (none): no claim being made
+
+   *  Hardware (affirming): genuine
+
+   *  Runtime Opaque (none): no claim being made
+
+   *  Storage Opaque (none): no claim being made
+
+   *  Sourced Data (none): no claim being made
+
+   The example in Figure 5 is a minimalist (successful) attestation
+   result that doesn't carry a trustworthiness vector.
+
+   {
+     "eat_profile": "tag:github.com,2022:veraison/ear",
+     "ear.status": "affirming",
+     "ear.raw-evidence": "b2tva29rb2tva29rb2sK",
+     "ear.appraisal-policy-id": "https://veraison.example/policy/1/60a0068d",
+     "iat": 1666529310
+   }
+
+           Figure 5: JSON claims-set: simple affirming appraisal
+
 3.4.  CBOR Serialisation
 
-   ; $ar4si-trust-tier
+   ; $ar4si.trust-tier code-points
    ar4si.trust-tier-none = 0
    ar4si.trust-tier-affirming = 2
    ar4si.trust-tier-warning = 32
    ar4si.trust-tier-contraindicated = 96
 
-   ; EAR (EAT Attestation Result)
+   ; EAR claims keys
    ear.status = 1000
    ear.trustworthiness-vector = 1001
    ear.raw-evidence = 1002
@@ -289,7 +343,7 @@ Table of Contents
    eat_profile = 265
    iat = 6
 
-   ; ar4si-trustworthiness-vector
+   ; ar4si.trustworthiness-vector keys
    instance-identity = 0
    configuration = 1
    executables = 2
@@ -299,12 +353,9 @@ Table of Contents
    storage-opaque = 6
    sourced-data = 7
 
-   ; types
-   numeric-date = ~time
+   ; CBOR type mappings
    ear-bytes = bytes
    ear-label = int / text
-
-   ; vim: set tw=70 ts=2 et:
 
 3.4.1.  Examples
 
@@ -435,6 +486,10 @@ Table of Contents
               <https://www.rfc-editor.org/rfc/rfc9052>.
 
 7.2.  Informative References
+
+   [RFC4151]  Kindberg, T. and S. Hawke, "The 'tag' URI Scheme",
+              RFC 4151, DOI 10.17487/RFC4151, October 2005,
+              <https://www.rfc-editor.org/rfc/rfc4151>.
 
    [RFC7942]  Sheffer, Y. and A. Farrel, "Improving Awareness of Running
               Code: The Implementation Status Section", BCP 205,
