@@ -5,10 +5,10 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                               Arm Limited
 Intended status: Standards Track                                 E. Voit
-Expires: 10 June 2023                                              Cisco
+Expires: 15 June 2023                                              Cisco
                                                              S. Trofimov
                                                              Arm Limited
-                                                         7 December 2022
+                                                        12 December 2022
 
 
                         EAT Attestation Results
@@ -62,7 +62,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 June 2023.
+   This Internet-Draft will expire on 15 June 2023.
 
 Copyright Notice
 
@@ -158,8 +158,9 @@ Table of Contents
       The overall appraisal status represented as one of the four
       trustworthiness tiers (Section 3.2).  If the ear.trustworthiness-
       vector claim is also present, the value of this claim MUST be set
-      to the tier corresponding to the worst trustworthiness claim
-      across the entire trustworthiness vector.
+      to a tier of no higher trust than the tier corresponding to the
+      worst trustworthiness claim across the entire trustworthiness
+      vector.
 
    eat_profile (mandatory)
       The EAT profile (Section 6 of [I-D.ietf-rats-eat]) associated with
@@ -172,16 +173,17 @@ Table of Contents
       appraisal.  See Section 3.1 for the details.
 
    ear.raw-evidence (optional)
-      The unabridged evidence submitted for appraisal.
+      The unabridged evidence submitted for appraisal, including any
+      signed container/envelope.
 
    iat (mandatory)
-      The time at which the EAR is issued.  See Section 4.1.6 of
-      [RFC7519] and Section 4.3.1 of [I-D.ietf-rats-eat] for the EAT-
-      specific encoding restrictions (i.e., disallowing the floating
-      point representation).
+      "Issued At" claim -- the time at which the EAR is issued.  See
+      Section 4.1.6 of [RFC7519] and Section 4.3.1 of
+      [I-D.ietf-rats-eat] for the EAT-specific encoding restrictions
+      (i.e., disallowing the floating point representation).
 
    ear.appraisal-policy-id (optional)
-      An unique identifier of the appraisal policy used to compute the
+      An unique identifier of the appraisal policy used to evaluate the
       attestation result.
 
    $$ear-extension (optional)
