@@ -89,15 +89,18 @@ Table of Contents
        3.3.1.  Examples
      3.4.  CBOR Serialisation
        3.4.1.  Examples
-     3.5.  Extensions
-   4.  Implementation Status
-     4.1.  github.com/veraison/ear
-   5.  Security Considerations
-   6.  IANA Considerations
-     6.1.   New EAT Claims
-   7.  References
-     7.1.  Normative References
-     7.2.  Informative References
+   4.  EAR Extensions
+     4.1.  Veraison Deployment Extensions
+       4.1.1.  JSON Serialization
+       4.1.2.  CBOR Serialization
+   5.  Implementation Status
+     5.1.  github.com/veraison/ear
+   6.  Security Considerations
+   7.  IANA Considerations
+     7.1.   New EAT Claims
+   8.  References
+     8.1.  Normative References
+     8.2.  Informative References
    Acknowledgments
    Authors' Addresses
 
@@ -189,7 +192,7 @@ Table of Contents
 
    $$ear-extension (optional)
       Any application- or deployment-specific extension.  An EAR
-      extension MUST be a map.  See Section 3.5 for further details.
+      extension MUST be a map.  See Section 4 for further details.
 
 3.1.  Trustworthiness Vector
 
@@ -380,7 +383,7 @@ Table of Contents
      6: 1666529184
    }
 
-3.5.  Extensions
+4.  EAR Extensions
 
    EAR provides core semantics for describing the result of appraising
    attestation evidence.  However, a given deployment may offer extra
@@ -420,7 +423,148 @@ Table of Contents
 
    A receiver MUST ignore any unknown claim.
 
-4.  Implementation Status
+4.1.  Veraison Deployment Extensions
+
+   The Veraison verifier defines two private, deployment-specific
+   extensions:
+
+   *  Processed Evidence:  The appraised evidence claims-set converted
+         into a JSON object.
+
+   *  Verifier Added Claims:  A JSON map containing any claims about the
+         attester that are inferred by the verifier during the appraisal
+         process.  For example: the certification status associated with
+         the device, or any other endorsed attribute.
+
+   $$ear-extension //= (
+     ear.veraison.processed-evidence =>
+       ear-veraison-processed-evidence
+   )
+
+   ear-veraison-processed-evidence = {
+     + ear-label => any
+   }
+
+   $$ear-extension //= (
+     ear.veraison.verifier-added-claims =>
+       ear-veraison-verifier-added-claims
+   )
+
+   ear-veraison-verifier-added-claims = {
+     + ear-label => any
+   }
+
+         Figure 6: Veraison Deployment Extensions (CDDL Definition)
+
+4.1.1.  JSON Serialization
+
+   ear.veraison.processed-evidence =
+     "ear.veraison.processed-evidence"
+
+   ear.veraison.verifier-added-claims =
+     "ear.veraison.verifier-added-claims"
+
+   Example:
+
+   {
+     "eat_profile": "tag:github.com,2022:veraison/ear",
+     "ear.status": "affirming",
+     "ear.trustworthiness-vector": {
+       "instance-identity": 2,
+       "configuration": 2,
+       "executables": 2,
+       "hardware": 2
+     },
+     "iat": 1666529284,
+     "ear.appraisal-policy-id": "https://veraison.example/policy/1/60a0068d",
+     "ear.veraison.processed-evidence": {
+       "eat-profile": "http://arm.com/psa/2.0.0",
+       "psa-client-id": 1,
+       "psa-security-lifecycle": 12288,
+       "psa-implementation-id": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+       "psa-software-components": [
+         {
+           "measurement-value": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+           "signer-id": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
+         },
+         {
+           "measurement-value": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+           "signer-id": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
+         }
+       ],
+       "psa-nonce": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+       "psa-instance-id": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
+       "psa-certification-reference": "1234567890123-12345"
+     },
+     "ear.veraison.verifier-added-claims": {
+       "psa-certified": {
+         "certificate-number": "1234567890123-12345",
+         "date-of-issue": "23/06/2022",
+         "test-lab": "Riscure",
+         "certification-holder": "ACME Inc.",
+         "certified-product": "RoadRunner",
+         "hardware-version": "Gizmo v1.0.2",
+         "software-version": "TrustedFirmware-M v1.0.6",
+         "certification-type": "PSA Certified Level 1 v2.1",
+         "developer-type": "PSA Certified – Device"
+       }
+     }
+   }
+
+4.1.2.  CBOR Serialization
+
+   ear.veraison.processed-evidence = -70000
+   ear.veraison.verifier-added-claims = -70001
+
+   Example:
+
+   {
+     265: "tag:github.com,2022:veraison/ear",
+     1000: 0,
+     1001: {
+       0: 2,
+       1: 2,
+       2: 2,
+       4: 2
+     },
+     1002: h'6C696665626F61746D616E',
+     1003: "https://veraison.example/policy/1/60a0068d",
+     6: 1666529184,
+     -70000: {
+       "eat-profile": "http://arm.com/psa/2.0.0",
+       "psa-client-id": 1,
+       "psa-security-lifecycle": 12288,
+       "psa-implementation-id": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+       "psa-software-components": [
+         {
+           "measurement-value": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+           "signer-id": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
+         },
+         {
+           "measurement-value": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+           "signer-id": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
+         }
+       ],
+       "psa-nonce": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+       "psa-instance-id": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
+       "psa-certification-reference": "1234567890123-12345"
+     },
+     -70001: {
+       "psa-certified": {
+         "certificate-number": "1234567890123-12345",
+         "date-of-issue": "23/06/2022",
+         "test-lab": "Riscure",
+         "certification-holder": "ACME Inc.",
+         "certified-product": "RoadRunner",
+         "hardware-version": "Gizmo v1.0.2",
+         "software-version": "TrustedFirmware-M v1.0.6",
+         "certification-type": "PSA Certified Level 1 v2.1",
+         "developer-type": "PSA Certified – Device"
+       }
+     }
+   }
+
+5.  Implementation Status
 
    This section records the status of known implementations of the
    protocol defined by this specification at the time of posting of this
@@ -442,7 +586,7 @@ Table of Contents
    It is up to the individual working groups to use this information as
    they see fit".
 
-4.1.  github.com/veraison/ear
+5.1.  github.com/veraison/ear
 
    The organization responsible for this implementation is Veraison, a
    Linux Foundation project hosted at the Confidential Computing
@@ -456,19 +600,19 @@ Table of Contents
    The package is used by the Veraison verifier to produce attestation
    results.
 
-5.  Security Considerations
+6.  Security Considerations
 
    TODO Security
 
-6.  IANA Considerations
+7.  IANA Considerations
 
-6.1.   New EAT Claims
+7.1.   New EAT Claims
 
    TODO
 
-7.  References
+8.  References
 
-7.1.  Normative References
+8.1.  Normative References
 
    [I-D.ietf-rats-ar4si]
               Voit, E., Birkholz, H., Hardjono, T., Fossati, T., and V.
@@ -534,7 +678,7 @@ Table of Contents
               DOI 10.17487/RFC9052, August 2022,
               <https://www.rfc-editor.org/rfc/rfc9052>.
 
-7.2.  Informative References
+8.2.  Informative References
 
    [IANA.cwt] IANA, "CBOR Web Token (CWT) Claims",
               <https://www.iana.org/assignments/cwt>.
