@@ -442,7 +442,7 @@ Table of Contents
 4.3.  Choosing between registered and unregistered claims
 
    If an extension is to support functionality of a specific application
-   (e.g.  Veraison Services), its claims SHOULD be unregistered.
+   (e.g.  Veraison Services), its claims MAY be registered.
 
    If an extension is to support a protocol that may be applicable
    across multiple applications or environments (e.g., TEEP), its claims
