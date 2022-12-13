@@ -5,10 +5,10 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                               Arm Limited
 Intended status: Standards Track                                 E. Voit
-Expires: 15 June 2023                                              Cisco
+Expires: 16 June 2023                                              Cisco
                                                              S. Trofimov
                                                              Arm Limited
-                                                        12 December 2022
+                                                        13 December 2022
 
 
                         EAT Attestation Results
@@ -62,7 +62,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 June 2023.
+   This Internet-Draft will expire on 16 June 2023.
 
 Copyright Notice
 
@@ -89,14 +89,27 @@ Table of Contents
        3.3.1.  Examples
      3.4.  CBOR Serialisation
        3.4.1.  Examples
-     3.5.  Extensions
-   4.  Implementation Status
-     4.1.  github.com/veraison/ear
-   5.  Security Considerations
-   6.  IANA Considerations
-   7.  References
-     7.1.  Normative References
-     7.2.  Informative References
+   4.  EAR Extensions
+     4.1.  TEEP Application Extensions
+       4.1.1.  JSON Serialization
+       4.1.2.  CBOR Serialization
+     4.2.  Veraison Deployment Extensions
+       4.2.1.  JSON Serialization
+       4.2.2.  CBOR Serialization
+   5.  Media Types
+   6.  Implementation Status
+     6.1.  github.com/veraison/ear
+   7.  Security Considerations
+   8.  IANA Considerations
+     8.1.   New EAT Claims
+       8.1.1.  EAR Status
+       8.1.2.  EAR Trustworthiness Vector
+       8.1.3.  EAR Raw Evidence
+       8.1.4.  EAR Appraisal Policy Identifier
+       8.1.5.  EAR TEEP Application Claims
+   9.  References
+     9.1.  Normative References
+     9.2.  Informative References
    Acknowledgments
    Authors' Addresses
 
@@ -188,7 +201,7 @@ Table of Contents
 
    $$ear-extension (optional)
       Any application- or deployment-specific extension.  An EAR
-      extension MUST be a map.  See Section 3.5 for further details.
+      extension MUST be a map.  See Section 4 for further details.
 
 3.1.  Trustworthiness Vector
 
@@ -379,11 +392,297 @@ Table of Contents
      6: 1666529184
    }
 
-3.5.  Extensions
+4.  EAR Extensions
 
-   TODO
+   EAR provides core semantics for describing the result of appraising
+   attestation evidence.  However, a given deployment may offer extra
+   functionality to its relying parties, or tailor the attestation
+   result to the needs of an application (e.g., TEEP
+   [I-D.ietf-teep-protocol]).  To accommodate such cases, the EAR
+   claims-set can be extended by plugging new claims into the $$ear-
+   extension CDDL socket.
 
-4.  Implementation Status
+   The rules that govern extensibility of EAR are those defined in
+   [RFC8392] and [RFC7519] for CWTs and JWTs respectively.  An up-to-
+   date view of the registered claims can be obtained via the [IANA.cwt]
+   and [IANA.jwt] registries.
+
+   A deployment-specific extension will normally mint its claim from the
+   "private space" - using integer values less than -65536 for CWT, and
+   Public or Private Claim Names as defined in Sections 4.2 and 4.3 of
+   [RFC7519] when serializing to JWT.  It is RECOMMENDED that JWT EARs
+   use Collision-Resistant Public Claim Names (Section 2 of [RFC7519])
+   rather than Private Claim Names.
+
+   If there is even the slightest chance that an application-specific
+   extension will be used across multiple environments, the associated
+   extension claim SHOULD be registered in one, or both, the CWT and JWT
+   claim registries.  Since there is in general no guarantee that an
+   application will be confined within an environment, it is RECOMMENDED
+   that application-specific extension claims are always registered.
+
+   In general, if the registration policy requires an accompanying
+   specification document (as it is the case for "specification
+   required" and "standards action"), such document SHOULD explicitly
+   say that the extension is expected to be used in EAR claims-sets
+   identified by this profile.
+
+   An extension MUST NOT change the semantics of the base EAR claims-
+   set.
+
+   A receiver MUST ignore any unknown claim.
+
+4.1.  TEEP Application Extensions
+
+   The TEEP protocol [I-D.ietf-teep-protocol] specifies the required
+   claims that an attestation result must carry for a TAM (Trusted
+   Application Manager) to make decisions on how to remediate a TEE
+   (Trusted Execution Environment) that is out of compliance, or update
+   a TEE that is requesting an authorized change.
+
+   The list is provided in Section 4.3.1 of [I-D.ietf-teep-protocol].
+
+   EAR defines a TEEP application extension for the purpose of conveying
+   such claims.
+
+   $$ear-extension //= (
+     ear.teep-claims => ear-teep-claims
+   )
+
+   ear-teep-claims = non-empty<{
+     ? eat.nonce => eat.nonce-type
+     ? eat.ueid => eat.ueid-type
+     ? eat.oemid => eat.oemid-type
+     ? eat.hardware-model => eat.hardware-model-type
+     ? eat.hardware-version => eat.hardware-version-type
+     ? eat.manifests => eat.manifests-type
+   }>
+
+           Figure 6: TEEP Application Extension (CDDL Definition)
+
+4.1.1.  JSON Serialization
+
+   ear.teep.claims = "ear.teep.claims"
+
+   eat.nonce = "nonce"
+   eat.ueid = "ueid"
+   eat.oemid = "oemid"
+   eat.hardware-model = "hwmodel"
+   eat.hardware-version = "hwversion"
+   eat.manifests = "manifests"
+
+   eat.nonce-type = tstr .size (10..74)
+
+   eat.ueid-type = base64-url-text ; cddl(1)-unsupported: .size (12..44)
+
+   eat.oemid-type = oemid-pen / oemid-ieee / oemid-random
+
+   eat.hardware-model-type = base64-url-text ; cddl(1)-unsupported: .size (4..44)
+
+   eat.hardware-version-type = [
+     version:  tstr,
+     ? scheme:  $version-scheme
+   ]
+
+   eat.manifests-type = [ + manifest-format ]
+
+   manifest-format = [
+     content-type:   coap-content-format,
+     content-format: base64-url-text / text
+   ]
+
+   coap-content-format = uint .le 65535
+
+   oemid-pen = int
+   oemid-ieee = base64-url-text ; cddl(1)-unsupported: .size 4
+   oemid-random = base64-url-text ; cddl(1)-unsupported: .size 24
+
+   base64-url-text = tstr .regexp "[A-Za-z0-9_=-]+"
+
+   Example:
+
+   {
+     "eat_profile": "tag:github.com,2022:veraison/ear",
+     "ear.status": "affirming",
+     "ear.trustworthiness-vector": {
+       "instance-identity": 2,
+       "configuration": 2,
+       "executables": 2,
+       "hardware": 2
+     },
+     "iat": 1666529284,
+     "ear.appraisal-policy-id": "https://veraison.example/policy/1/60a0068d",
+     "ear.teep-claims": {
+       "nonce": "80FH7byS7VjfARIq0_KLqu6B9j-F79QtV6p",
+       "ueid": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
+       "oemid": "Av8B",
+       "hwmodel": "fJYq",
+       "hwversion": ["1.2.5", 16384]
+     }
+   }
+
+4.1.2.  CBOR Serialization
+
+   ear.teep.claims = 65000
+
+   ; TODO
+
+4.2.  Veraison Deployment Extensions
+
+   The Veraison verifier defines two private, deployment-specific
+   extensions:
+
+   *  Processed Evidence:  The appraised evidence claims-set converted
+         into a JSON object.
+
+   *  Verifier Added Claims:  A JSON map containing any claims about the
+         attester that are inferred by the verifier during the appraisal
+         process.  For example: the certification status associated with
+         the device, or any other endorsed attribute.
+
+   $$ear-extension //= (
+     ear.veraison.processed-evidence =>
+       ear-veraison-processed-evidence
+   )
+
+   ear-veraison-processed-evidence = {
+     + ear-label => any
+   }
+
+   $$ear-extension //= (
+     ear.veraison.verifier-added-claims =>
+       ear-veraison-verifier-added-claims
+   )
+
+   ear-veraison-verifier-added-claims = {
+     + ear-label => any
+   }
+
+         Figure 7: Veraison Deployment Extensions (CDDL Definition)
+
+4.2.1.  JSON Serialization
+
+   ear.veraison.processed-evidence =
+     "ear.veraison.processed-evidence"
+
+   ear.veraison.verifier-added-claims =
+     "ear.veraison.verifier-added-claims"
+
+   Example:
+
+   {
+     "eat_profile": "tag:github.com,2022:veraison/ear",
+     "ear.status": "affirming",
+     "ear.trustworthiness-vector": {
+       "instance-identity": 2,
+       "configuration": 2,
+       "executables": 2,
+       "hardware": 2
+     },
+     "iat": 1666529284,
+     "ear.appraisal-policy-id": "https://veraison.example/policy/1/60a0068d",
+     "ear.veraison.processed-evidence": {
+       "eat-profile": "http://arm.com/psa/2.0.0",
+       "psa-client-id": 1,
+       "psa-security-lifecycle": 12288,
+       "psa-implementation-id": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+       "psa-software-components": [
+         {
+           "measurement-value": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+           "signer-id": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
+         },
+         {
+           "measurement-value": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+           "signer-id": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
+         }
+       ],
+       "psa-nonce": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+       "psa-instance-id": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
+       "psa-certification-reference": "1234567890123-12345"
+     },
+     "ear.veraison.verifier-added-claims": {
+       "psa-certified": {
+         "certificate-number": "1234567890123-12345",
+         "date-of-issue": "23/06/2022",
+         "test-lab": "Riscure",
+         "certification-holder": "ACME Inc.",
+         "certified-product": "RoadRunner",
+         "hardware-version": "Gizmo v1.0.2",
+         "software-version": "TrustedFirmware-M v1.0.6",
+         "certification-type": "PSA Certified Level 1 v2.1",
+         "developer-type": "PSA Certified – Device"
+       }
+     }
+   }
+
+4.2.2.  CBOR Serialization
+
+   ear.veraison.processed-evidence = -70000
+   ear.veraison.verifier-added-claims = -70001
+
+   Example:
+
+   {
+     265: "tag:github.com,2022:veraison/ear",
+     1000: 0,
+     1001: {
+       0: 2,
+       1: 2,
+       2: 2,
+       4: 2
+     },
+     1002: h'6C696665626F61746D616E',
+     1003: "https://veraison.example/policy/1/60a0068d",
+     6: 1666529184,
+     -70000: {
+       "eat-profile": "http://arm.com/psa/2.0.0",
+       "psa-client-id": 1,
+       "psa-security-lifecycle": 12288,
+       "psa-implementation-id": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+       "psa-software-components": [
+         {
+           "measurement-value": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+           "signer-id": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
+         },
+         {
+           "measurement-value": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+           "signer-id": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
+         }
+       ],
+       "psa-nonce": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=",
+       "psa-instance-id": "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAh",
+       "psa-certification-reference": "1234567890123-12345"
+     },
+     -70001: {
+       "psa-certified": {
+         "certificate-number": "1234567890123-12345",
+         "date-of-issue": "23/06/2022",
+         "test-lab": "Riscure",
+         "certification-holder": "ACME Inc.",
+         "certified-product": "RoadRunner",
+         "hardware-version": "Gizmo v1.0.2",
+         "software-version": "TrustedFirmware-M v1.0.6",
+         "certification-type": "PSA Certified Level 1 v2.1",
+         "developer-type": "PSA Certified – Device"
+       }
+     }
+   }
+
+5.  Media Types
+
+   Media types for EAR are automatically derived from the base EAT media
+   type [I-D.ietf-rats-eat-media-type] using the profile string defined
+   in Section 3.
+
+   For example, a JWT serialization would use:
+
+   application/eat-jwt; eat_profile="tag:github.com,2022:veraison/ear"
+
+   A CWT serialization would instead use:
+
+   application/eat-cwt; eat_profile="tag:github.com,2022:veraison/ear"
+
+6.  Implementation Status
 
    This section records the status of known implementations of the
    protocol defined by this specification at the time of posting of this
@@ -405,7 +704,7 @@ Table of Contents
    It is up to the individual working groups to use this information as
    they see fit".
 
-4.1.  github.com/veraison/ear
+6.1.  github.com/veraison/ear
 
    The organization responsible for this implementation is Veraison, a
    Linux Foundation project hosted at the Confidential Computing
@@ -419,17 +718,110 @@ Table of Contents
    The package is used by the Veraison verifier to produce attestation
    results.
 
-5.  Security Considerations
+7.  Security Considerations
 
    TODO Security
 
-6.  IANA Considerations
+8.  IANA Considerations
 
-   This document has no IANA actions.
+8.1.   New EAT Claims
 
-7.  References
+   This specification adds the following values to the "JSON Web Token
+   Claims" registry [IANA.jwt] and the "CBOR Web Token Claims" registry
+   [IANA.cwt].
 
-7.1.  Normative References
+   Each entry below is an addition to both registries.
+
+   The "Claim Description", "Change Controller" and "Specification
+   Documents" are common and equivalent for the JWT and CWT registries.
+   The "Claim Key" and "Claim Value Types(s)" are for the CWT registry
+   only.  The "Claim Name" is as defined for the CWT registry, not the
+   JWT registry.  The "JWT Claim Name" is equivalent to the "Claim Name"
+   in the JWT registry.
+
+8.1.1.  EAR Status
+
+   *  Claim Name: ear.status
+
+   *  Claim Description: EAR Status
+
+   *  JWT Claim Name: ear.status
+
+   *  Claim Key: 1000
+
+   *  Claim Value Type(s): unsigned integer (0, 2, 32, 96)
+
+   *  Change Controller: IESG
+
+   *  Specification Document(s): Section 3 of RFCthis
+
+8.1.2.  EAR Trustworthiness Vector
+
+   *  Claim Name: ear.trustworthiness-vector
+
+   *  Claim Description: EAR Trustworthiness Vector
+
+   *  JWT Claim Name: ear.trustworthiness-vector
+
+   *  Claim Key: 1001
+
+   *  Claim Value Type(s): array
+
+   *  Change Controller: IESG
+
+   *  Specification Document(s): Section 3 of RFCthis
+
+8.1.3.  EAR Raw Evidence
+
+   *  Claim Name: ear.raw-evidence
+
+   *  Claim Description: EAR Raw Evidence
+
+   *  JWT Claim Name: ear.raw-evidence
+
+   *  Claim Key: 1002
+
+   *  Claim Value Type(s): bytes
+
+   *  Change Controller: IESG
+
+   *  Specification Document(s): Section 3 of RFCthis
+
+8.1.4.  EAR Appraisal Policy Identifier
+
+   *  Claim Name: ear.appraisal-policy-id
+
+   *  Claim Description: EAR Appraisal Policy Identifier
+
+   *  JWT Claim Name: ear.appraisal-policy-id
+
+   *  Claim Key: 1003
+
+   *  Claim Value Type(s): text
+
+   *  Change Controller: IESG
+
+   *  Specification Document(s): Section 3 of RFCthis
+
+8.1.5.  EAR TEEP Application Claims
+
+   *  Claim Name: ear.teep-claims
+
+   *  Claim Description: EAR TEEP Application Claims
+
+   *  JWT Claim Name: ear.teep-claims
+
+   *  Claim Key: 1004
+
+   *  Claim Value Type(s): array
+
+   *  Change Controller: IESG
+
+   *  Specification Document(s): Section 4.1 of RFCthis
+
+9.  References
+
+9.1.  Normative References
 
    [I-D.ietf-rats-ar4si]
               Voit, E., Birkholz, H., Hardjono, T., Fossati, T., and V.
@@ -453,6 +845,21 @@ Table of Contents
               Progress, Internet-Draft, draft-ietf-rats-eat-18, 4
               December 2022, <https://datatracker.ietf.org/doc/html/
               draft-ietf-rats-eat-18>.
+
+   [I-D.ietf-rats-eat-media-type]
+              Lundblade, L., Birkholz, H., and T. Fossati, "EAT Media
+              Types", Work in Progress, Internet-Draft, draft-ietf-rats-
+              eat-media-type-01, 19 October 2022,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-rats-
+              eat-media-type-01>.
+
+   [I-D.ietf-teep-protocol]
+              Tschofenig, H., Pei, M., Wheeler, D. M., Thaler, D., and
+              A. Tsukamoto, "Trusted Execution Environment Provisioning
+              (TEEP) Protocol", Work in Progress, Internet-Draft, draft-
+              ietf-teep-protocol-11, 24 October 2022,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-teep-
+              protocol-11>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -487,7 +894,13 @@ Table of Contents
               DOI 10.17487/RFC9052, August 2022,
               <https://www.rfc-editor.org/rfc/rfc9052>.
 
-7.2.  Informative References
+9.2.  Informative References
+
+   [IANA.cwt] IANA, "CBOR Web Token (CWT) Claims",
+              <https://www.iana.org/assignments/cwt>.
+
+   [IANA.jwt] IANA, "JSON Web Token (JWT)",
+              <https://www.iana.org/assignments/jwt>.
 
    [RFC4151]  Kindberg, T. and S. Hawke, "The 'tag' URI Scheme",
               RFC 4151, DOI 10.17487/RFC4151, October 2005,
