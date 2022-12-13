@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-12-11T01:05:35.220398+00:00",
+  "timestamp": "2022-12-13T01:04:06.822327+00:00",
   "repo": "thomas-fossati/draft-ear",
   "labels": [
     {
@@ -50,5 +50,82 @@
     }
   ],
   "issues": [],
-  "pulls": []
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDOIe69Es5FLdsG",
+      "title": "Clarifying updates",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/1",
+      "state": "MERGED",
+      "author": "setrofim",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "- Specify that the ear.status tier must be no higher trust than what is\r\n  implied by the trust vector, but could be lower. This allows for the\r\n  possibility that the deployment-specific policy would evaluate the\r\n  evidence to be less trustworthy than the sum of its parts, without\r\n  necessarily overriding the trust level of any individual vector claim\r\n  (e.g. via a blacklist of specific devices).\r\n- Clarify that ear.raw-evidence should include the signature if present.\r\n- expand the meaning of \"iat\" claim name, as it is not immediately\r\n  obvious. It _is_ explained in the linked reference, but expanding it\r\n  here save the reader a click.\r\n- Change \"compute\" to \"evaluate\" in the ear.appraisal-policy-id, as\r\n  \"compute\" implies a higher level of rigidity than may be applied by\r\n  relying (or some other third) party-provided policies.",
+      "createdAt": "2022-12-12T11:29:38Z",
+      "updatedAt": "2022-12-12T12:39:42Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "d3ac6eea30bda67632ad8508d5d52f68a2904a6f",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "setrofim",
+      "headRefOid": "ef581039081e239dc016284f2b60b6baf5e338cb",
+      "closedAt": "2022-12-12T11:46:02Z",
+      "mergedAt": "2022-12-12T11:46:02Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "5e8d13c17d60e8076992e8e3cdcd7ecadd631f40"
+      },
+      "comments": [
+        {
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "body": "## Policy ID calarification\r\n\r\nAdding as a comment here, rather than in the commit message as not necessarily related to the EAR spec per se.\r\n\r\nThe way we currently use policy ID in Veraision is to identify additional evaluation policies. The definition for EAR implies that \"policy ID\" covers not only what we call a \"policy\"  in Veraison, but also the \"scheme\". Currently, if no additional policy is specified, and the evidence is evaluated only according to the identified scheme, we do not set the policy ID in the result. Should be setting it to a scheme-defined value instead?",
+          "createdAt": "2022-12-12T11:33:22Z",
+          "updatedAt": "2022-12-12T11:33:22Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es5IUo8c",
+          "commit": {
+            "abbreviatedOid": "ef58103"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "\ud83d\udc4d ",
+          "createdAt": "2022-12-12T11:45:21Z",
+          "updatedAt": "2022-12-12T11:45:21Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "id": "PR_kwDOIe69Es5FPmrq",
+      "title": "extensibility considerations + barebones veraison",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/2",
+      "state": "OPEN",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Add \u00a74 about criteria for both application- and deployment-specific extensions\r\nAdd \u00a74.1 to document Veraison (deployment) extensions\r\n\r\nAlso reflow text to fit 79 columns.\r\n\r\nPreview at https://thomas-fossati.github.io/draft-ear/veraison/draft-fv-rats-ear.html\r\n\r\n",
+      "createdAt": "2022-12-12T21:44:48Z",
+      "updatedAt": "2022-12-12T21:47:23Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "5e8d13c17d60e8076992e8e3cdcd7ecadd631f40",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "veraison",
+      "headRefOid": "e45a3f58938dc043249e093f5211f2cafd18afc2",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    }
+  ]
 }
