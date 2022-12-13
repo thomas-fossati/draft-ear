@@ -445,8 +445,8 @@ Table of Contents
    (e.g.  Veraison Services), its claims SHOULD be unregistered.
 
    If an extension is to support a protocol that may be applicable
-   across multiple applications or environments (e.g.  TEEP), it's
-   claims SHOULD be registered.
+   across multiple applications or environments (e.g., TEEP), its claims
+   SHOULD be registered.
 
    Since, in general, there is no guarantee that an application will be
    confined within an environment, it is RECOMMENDED that extension
