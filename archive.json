@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-12-13T01:04:06.822327+00:00",
+  "timestamp": "2022-12-15T01:01:25.206064+00:00",
   "repo": "thomas-fossati/draft-ear",
   "labels": [
     {
@@ -49,7 +49,40 @@
       "color": "ffffff"
     }
   ],
-  "issues": [],
+  "issues": [
+    {
+      "number": 5,
+      "id": "I_kwDOIe69Es5ZFnVK",
+      "title": "environment identification",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/5",
+      "state": "OPEN",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "As discussed in today's (13/12/2022) Veraison meeting, we need to include claims to identify the verifier's execution environment, for example:\r\n* software release information (for Veraison it'd be core services and loaded plugins)\r\n* TEE identification (e.g., evidence)\r\n\r\nOne question we need to answer is where does it belong?  To the core claims-set or into an extension claim?",
+      "createdAt": "2022-12-13T16:31:45Z",
+      "updatedAt": "2022-12-13T16:31:45Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 6,
+      "id": "I_kwDOIe69Es5ZM1Im",
+      "title": "Simon's review comments",
+      "url": "https://github.com/thomas-fossati/draft-ear/issues/6",
+      "state": "OPEN",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "1. `ear.raw-evidence` - perhaps worth noting that this may be more relevant for auditors than for further processing\r\n1. [Example in 3.3.1](https://thomas-fossati.github.io/draft-ear/draft-fv-rats-ear.html#section-3.3.1): could remove a few of the TV entries e.g/ Storage + Sourced data as another example of 'no claim made'\r\n1. Veraison processed evidence: perhaps worth adding something about the 'verified' status of members here? (relates to the 'unprocessed evidence' conversations)\r\n",
+      "createdAt": "2022-12-14T12:29:14Z",
+      "updatedAt": "2022-12-14T12:29:14Z",
+      "closedAt": null,
+      "comments": []
+    }
+  ],
   "pulls": [
     {
       "number": 1,
@@ -106,26 +139,185 @@
       "id": "PR_kwDOIe69Es5FPmrq",
       "title": "extensibility considerations + barebones veraison",
       "url": "https://github.com/thomas-fossati/draft-ear/pull/2",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "thomas-fossati",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "Add \u00a74 about criteria for both application- and deployment-specific extensions\r\nAdd \u00a74.1 to document Veraison (deployment) extensions\r\n\r\nAlso reflow text to fit 79 columns.\r\n\r\nPreview at https://thomas-fossati.github.io/draft-ear/veraison/draft-fv-rats-ear.html\r\n\r\n",
       "createdAt": "2022-12-12T21:44:48Z",
-      "updatedAt": "2022-12-12T21:47:23Z",
+      "updatedAt": "2022-12-13T14:18:32Z",
       "baseRepository": "thomas-fossati/draft-ear",
       "baseRefName": "main",
       "baseRefOid": "5e8d13c17d60e8076992e8e3cdcd7ecadd631f40",
       "headRepository": "thomas-fossati/draft-ear",
       "headRefName": "veraison",
       "headRefOid": "e45a3f58938dc043249e093f5211f2cafd18afc2",
-      "closedAt": null,
+      "closedAt": "2022-12-13T14:18:32Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
+      "comments": [
+        {
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "body": "The distinction between deployment-specific and application-specific extensions is unclear. I'm guessing that the former is specific to a particular instance (deployment) of  a service, and the latter is specific to a service, but common across all deployments of that service? If that is the case, then shouldn't the Veraison extensions be application rather than deployment?",
+          "createdAt": "2022-12-13T10:31:52Z",
+          "updatedAt": "2022-12-13T10:32:08Z"
+        },
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "body": "subsumed by #3 ",
+          "createdAt": "2022-12-13T14:18:32Z",
+          "updatedAt": "2022-12-13T14:18:32Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es5IbDI1",
+          "commit": {
+            "abbreviatedOid": "e45a3f5"
+          },
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-12-13T09:16:06Z",
+          "updatedAt": "2022-12-13T10:29:10Z",
+          "comments": [
+            {
+              "originalPosition": 18,
+              "body": "```suggestion\r\n: The appraised evidence claims-set extracted from the submitted token and converted into a JSON object.\r\n```",
+              "createdAt": "2022-12-13T09:22:11Z",
+              "updatedAt": "2022-12-13T10:29:10Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es5IcaQW",
+          "commit": {
+            "abbreviatedOid": "e45a3f5"
+          },
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-12-13T12:50:48Z",
+          "updatedAt": "2022-12-13T12:50:48Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "id": "PR_kwDOIe69Es5FTe0z",
+      "title": "add TEEP extension, media types and registrations",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/3",
+      "state": "MERGED",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "* Document the TEEP application extension (JSON only for now)\r\n* Provide media types definitions using the EAT media types framework\r\n* Add registrations for the core EAR claims and the TEEP extension\r\n\r\nThis PR builds on top of #2 \r\n\r\nRendered at https://thomas-fossati.github.io/draft-ear/teep/draft-fv-rats-ear.html",
+      "createdAt": "2022-12-13T10:42:53Z",
+      "updatedAt": "2022-12-13T12:51:35Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "5e8d13c17d60e8076992e8e3cdcd7ecadd631f40",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "teep",
+      "headRefOid": "1bd58611268ac00adc8237b5a9f71be51d0d7f31",
+      "closedAt": "2022-12-13T12:51:32Z",
+      "mergedAt": "2022-12-13T12:51:32Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "7b0c645c053f6ac78b5db35449b71b6073e8e43a"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es5IcE3Y",
+          "commit": {
+            "abbreviatedOid": "1bd5861"
+          },
+          "author": "setrofim",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "LGTM",
+          "createdAt": "2022-12-13T11:51:42Z",
+          "updatedAt": "2022-12-13T11:51:42Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "id": "PR_kwDOIe69Es5FUi5I",
+      "title": "Clarify the distinction between claim types",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/4",
+      "state": "MERGED",
+      "author": "setrofim",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "- Replace \"application\" and \"deployment\" claim terminology with \"registered\" and \"unregistered\", as the meaning and distinction of \"deployment\" w.r.t. \"application\" may be confusing.\r\n- Restructure the claims section into subsections describing the registered and unregistered claims, and offering guidance on when each should be used.\r\n\r\nSigned-off-by: setrofim <setrofim@gmail.com>",
+      "createdAt": "2022-12-13T13:40:48Z",
+      "updatedAt": "2022-12-13T14:20:13Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "7b0c645c053f6ac78b5db35449b71b6073e8e43a",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "setrofim",
+      "headRefOid": "cbabe3d685ee9893d197740637c6a0dc6e3d2a87",
+      "closedAt": "2022-12-13T14:20:09Z",
+      "mergedAt": "2022-12-13T14:20:09Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "3724351646946bb5f463568ae739b3fd4024a553"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es5Ic4OE",
+          "commit": {
+            "abbreviatedOid": "3ccd5ab"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "LGTM, thanks!\r\n\r\nI've left one suggested change on use of normative language.",
+          "createdAt": "2022-12-13T14:02:46Z",
+          "updatedAt": "2022-12-13T14:04:09Z",
+          "comments": [
+            {
+              "originalPosition": 83,
+              "body": "I wouldn't make this a prescription.  If the application wants to register, they can -- in fact, it's probably better, tough non-zero cost.\r\n\r\nWe could probably use a mild encouragement: _\"[...] its claims MAY be registered\"_",
+              "createdAt": "2022-12-13T14:02:46Z",
+              "updatedAt": "2022-12-13T14:04:09Z"
+            },
+            {
+              "originalPosition": 86,
+              "body": "```suggestion\r\napplications or environments (e.g., TEEP), its claims SHOULD be registered.\r\n```",
+              "createdAt": "2022-12-13T14:02:56Z",
+              "updatedAt": "2022-12-13T14:04:09Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOIe69Es5IdBcu",
+          "commit": {
+            "abbreviatedOid": "cbabe3d"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "\ud83d\udea2 it!",
+          "createdAt": "2022-12-13T14:19:32Z",
+          "updatedAt": "2022-12-13T14:19:32Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
