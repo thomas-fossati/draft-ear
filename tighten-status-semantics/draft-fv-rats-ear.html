@@ -1389,9 +1389,11 @@ It <span class="bcp14">MUST</span> be the following tag URI (<span>[<a href="#RF
         <dd style="margin-left: 1.5em" id="section-3-5.6">
           <p id="section-3-5.6.1">The AR4SI trustworthiness vector providing the breakdown of the appraisal.
 See <a href="#sec-tvector" class="auto internal xref">Section 3.1</a> for the details.
-This claim <span class="bcp14">MUST</span> always be present unless the party requesting Evidence
-appraisal explicitly asks it to be dropped (e.g., via an API parameter or
-similar arrangement) and rely on the semantics of the <code>ear.status</code> claims.<a href="#section-3-5.6.1" class="pilcrow">¶</a></p>
+This claim <span class="bcp14">MUST</span> be present unless the party requesting Evidence appraisal
+explicitly asks for it to be dropped, e.g., via an API parameter or similar
+arrangement.  Such consumer would therefore rely entirely on the semantics of
+the <code>ear.status</code> claim.  This behaviour is <span class="bcp14">NOT RECOMMENDED</span> because of the
+resulting loss of quality of the appraisal result.<a href="#section-3-5.6.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-3-5.7">
