@@ -30,14 +30,14 @@ It can be serialized and protected using either CWT or JWT.
 <meta content="draft-fv-rats-ear-latest" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.15.3
-    Python 3.10.8
+    Python 3.10.9
     appdirs 1.4.4
     ConfigArgParse 1.5.3
     google-i18n-address 2.5.2
     html5lib 1.1
     intervaltree 3.1.0
     Jinja2 3.1.2
-    lxml 4.9.1
+    lxml 4.9.2
     MarkupSafe 2.1.1
     pycountry 22.3.5
     PyYAML 6.0
@@ -411,7 +411,7 @@ dl > dd > dl {
   margin-top: 0.5em;
   margin-bottom: 0;
 }
-dl .break {
+:is(dd, span).break {
   display: none;
 }
 
@@ -431,7 +431,7 @@ a[href]:hover {
 a[href].selfRef:hover {
   background-color: var(--highlight-color);
 }
-a.xref {
+a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
   white-space: nowrap;
 }
 
@@ -443,7 +443,9 @@ tt, code, pre {
 tt, code {
   /* changing the font for inline elements leads to different ascender
      and descender heights; as we want to retain baseline alignment,
-     remove leading to avoid altering the final height of lines */
+     remove leading to avoid altering the final height of lines
+     note: this fails if these blocks take an entire line,
+     a different solution would be great */
   line-height: 0;
 }
 :is(h1, h2, h3, h4, h5, h6) :is(tt, code) {
@@ -1055,7 +1057,7 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Fossati, et al.</td>
-<td class="center">Expires 16 June 2023</td>
+<td class="center">Expires 24 June 2023</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1068,12 +1070,12 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-fv-rats-ear-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2022-12-13" class="published">13 December 2022</time>
+<time datetime="2022-12-21" class="published">21 December 2022</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2023-06-16">16 June 2023</time></dd>
+<dd class="expires"><time datetime="2023-06-24">24 June 2023</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1142,7 +1144,7 @@ It can be serialized and protected using either CWT or JWT.<a href="#section-abs
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 16 June 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 24 June 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1368,15 +1370,15 @@ EAR = {
         <dd style="margin-left: 1.5em" id="section-3-5.2">
           <p id="section-3-5.2.1">The overall appraisal status represented as one of the four trustworthiness
 tiers (<a href="#sec-trusttiers" class="auto internal xref">Section 3.2</a>).
-If the <code>ear.trustworthiness-vector</code> claim is also present, the value of this
-claim <span class="bcp14">MUST</span> be set to a tier of no higher trust than the tier corresponding to
-the worst trustworthiness claim across the entire trustworthiness vector.<a href="#section-3-5.2.1" class="pilcrow">¶</a></p>
+The value of this claim <span class="bcp14">MUST</span> be set to a tier of no higher trust than the tier
+corresponding to the worst trustworthiness claim across the entire
+trustworthiness vector.<a href="#section-3-5.2.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-3-5.3">
 <code>eat_profile</code> (mandatory)</dt>
         <dd style="margin-left: 1.5em" id="section-3-5.4">
-          <p id="section-3-5.4.1">The EAT profile (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-18#section-6" class="relref">Section 6</a> of [<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span>) associated with the EAR claims-set
+          <p id="section-3-5.4.1">The EAT profile (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-19#section-6" class="relref">Section 6</a> of [<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span>) associated with the EAR claims-set
 and encodings defined by this document.
 It <span class="bcp14">MUST</span> be the following tag URI (<span>[<a href="#RFC4151" class="cite xref">RFC4151</a>]</span>)
 <code>tag:github.com,2022:veraison/ear</code>.<a href="#section-3-5.4.1" class="pilcrow">¶</a></p>
@@ -1386,7 +1388,12 @@ It <span class="bcp14">MUST</span> be the following tag URI (<span>[<a href="#RF
 <code>ear.trustworthiness-vector</code> (optional)</dt>
         <dd style="margin-left: 1.5em" id="section-3-5.6">
           <p id="section-3-5.6.1">The AR4SI trustworthiness vector providing the breakdown of the appraisal.
-See <a href="#sec-tvector" class="auto internal xref">Section 3.1</a> for the details.<a href="#section-3-5.6.1" class="pilcrow">¶</a></p>
+See <a href="#sec-tvector" class="auto internal xref">Section 3.1</a> for the details.
+This claim <span class="bcp14">MUST</span> be present unless the party requesting Evidence appraisal
+explicitly asks for it to be dropped, e.g., via an API parameter or similar
+arrangement.  Such consumer would therefore rely entirely on the semantics of
+the <code>ear.status</code> claim.  This behaviour is <span class="bcp14">NOT RECOMMENDED</span> because of the
+resulting loss of quality of the appraisal result.<a href="#section-3-5.6.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-3-5.7">
@@ -1400,7 +1407,7 @@ container/envelope.<a href="#section-3-5.8.1" class="pilcrow">¶</a></p>
 <code>iat</code> (mandatory)</dt>
         <dd style="margin-left: 1.5em" id="section-3-5.10">
           <p id="section-3-5.10.1">"Issued At" claim -- the time at which the EAR is issued.
-See <span><a href="https://rfc-editor.org/rfc/rfc7519#section-4.1.6" class="relref">Section 4.1.6</a> of [<a href="#RFC7519" class="cite xref">RFC7519</a>]</span> and <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-18#section-4.3.1" class="relref">Section 4.3.1</a> of [<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span> for the
+See <span><a href="https://rfc-editor.org/rfc/rfc7519#section-4.1.6" class="relref">Section 4.1.6</a> of [<a href="#RFC7519" class="cite xref">RFC7519</a>]</span> and <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-19#section-4.3.1" class="relref">Section 4.3.1</a> of [<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span> for the
 EAT-specific encoding restrictions (i.e., disallowing the floating point
 representation).<a href="#section-3-5.10.1" class="pilcrow">¶</a></p>
 </dd>
@@ -2275,7 +2282,7 @@ The "JWT Claim Name" is equivalent to the "Claim Name" in the JWT registry.<a hr
 <dd class="break"></dd>
 <dt id="I-D.ietf-rats-eat">[I-D.ietf-rats-eat]</dt>
         <dd>
-<span class="refAuthor">Lundblade, L.</span>, <span class="refAuthor">Mandyam, G.</span>, <span class="refAuthor">O'Donoghue, J.</span>, and <span class="refAuthor">C. Wallace</span>, <span class="refTitle">"The Entity Attestation Token (EAT)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-rats-eat-18</span>, <time datetime="2022-12-04" class="refDate">4 December 2022</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-18">https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-18</a>&gt;</span>. </dd>
+<span class="refAuthor">Lundblade, L.</span>, <span class="refAuthor">Mandyam, G.</span>, <span class="refAuthor">O'Donoghue, J.</span>, and <span class="refAuthor">C. Wallace</span>, <span class="refTitle">"The Entity Attestation Token (EAT)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-rats-eat-19</span>, <time datetime="2022-12-19" class="refDate">19 December 2022</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-19">https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-19</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-rats-eat-media-type">[I-D.ietf-rats-eat-media-type]</dt>
         <dd>

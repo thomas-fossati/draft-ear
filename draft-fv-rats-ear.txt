@@ -5,10 +5,10 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                               Arm Limited
 Intended status: Standards Track                                 E. Voit
-Expires: 16 June 2023                                              Cisco
+Expires: 24 June 2023                                              Cisco
                                                              S. Trofimov
                                                              Arm Limited
-                                                        13 December 2022
+                                                        21 December 2022
 
 
                         EAT Attestation Results
@@ -62,7 +62,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 June 2023.
+   This Internet-Draft will expire on 24 June 2023.
 
 Copyright Notice
 
@@ -172,10 +172,9 @@ Table of Contents
 
    ear.status (mandatory)
       The overall appraisal status represented as one of the four
-      trustworthiness tiers (Section 3.2).  If the ear.trustworthiness-
-      vector claim is also present, the value of this claim MUST be set
-      to a tier of no higher trust than the tier corresponding to the
-      worst trustworthiness claim across the entire trustworthiness
+      trustworthiness tiers (Section 3.2).  The value of this claim MUST
+      be set to a tier of no higher trust than the tier corresponding to
+      the worst trustworthiness claim across the entire trustworthiness
       vector.
 
    eat_profile (mandatory)
@@ -186,7 +185,13 @@ Table of Contents
 
    ear.trustworthiness-vector (optional)
       The AR4SI trustworthiness vector providing the breakdown of the
-      appraisal.  See Section 3.1 for the details.
+      appraisal.  See Section 3.1 for the details.  This claim MUST be
+      present unless the party requesting Evidence appraisal explicitly
+      asks for it to be dropped, e.g., via an API parameter or similar
+      arrangement.  Such consumer would therefore rely entirely on the
+      semantics of the ear.status claim.  This behaviour is NOT
+      RECOMMENDED because of the resulting loss of quality of the
+      appraisal result.
 
    ear.raw-evidence (optional)
       The unabridged evidence submitted for appraisal, including any
@@ -869,9 +874,9 @@ Table of Contents
    [I-D.ietf-rats-eat]
               Lundblade, L., Mandyam, G., O'Donoghue, J., and C.
               Wallace, "The Entity Attestation Token (EAT)", Work in
-              Progress, Internet-Draft, draft-ietf-rats-eat-18, 4
+              Progress, Internet-Draft, draft-ietf-rats-eat-19, 19
               December 2022, <https://datatracker.ietf.org/doc/html/
-              draft-ietf-rats-eat-18>.
+              draft-ietf-rats-eat-19>.
 
    [I-D.ietf-rats-eat-media-type]
               Lundblade, L., Birkholz, H., and T. Fossati, "EAT Media
