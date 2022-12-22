@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-12-15T01:01:25.206064+00:00",
+  "timestamp": "2022-12-22T00:57:45.797854+00:00",
   "repo": "thomas-fossati/draft-ear",
   "labels": [
     {
@@ -315,6 +315,74 @@
           "body": "\ud83d\udea2 it!",
           "createdAt": "2022-12-13T14:19:32Z",
           "updatedAt": "2022-12-13T14:19:32Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "id": "PR_kwDOIe69Es5F5H0N",
+      "title": "status and trustworthiness vector semantics",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/7",
+      "state": "MERGED",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "An attempt at trying to tighten the semantics around status and trustworthiness vector claims.\r\n\r\nSigned-off-by: Thomas Fossati <thomas.fossati@arm.com>",
+      "createdAt": "2022-12-20T18:16:35Z",
+      "updatedAt": "2022-12-21T18:05:01Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "3724351646946bb5f463568ae739b3fd4024a553",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "tighten-status-semantics",
+      "headRefOid": "cf903e5372fd50205974c877e4c2ea29b4c55b64",
+      "closedAt": "2022-12-21T18:04:58Z",
+      "mergedAt": "2022-12-21T18:04:58Z",
+      "mergedBy": "thomas-fossati",
+      "mergeCommit": {
+        "oid": "d871ee121f56fbed90bcd656ad7434423b821fec"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOIe69Es5JGpM5",
+          "commit": {
+            "abbreviatedOid": "cf903e5"
+          },
+          "author": "ericvoit",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-12-21T17:22:41Z",
+          "updatedAt": "2022-12-21T17:22:41Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOIe69Es5JGpZq",
+          "commit": {
+            "abbreviatedOid": "cf903e5"
+          },
+          "author": "ericvoit",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-12-21T17:23:22Z",
+          "updatedAt": "2022-12-21T17:23:22Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOIe69Es5JGpwG",
+          "commit": {
+            "abbreviatedOid": "cf903e5"
+          },
+          "author": "ericvoit",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-12-21T17:24:23Z",
+          "updatedAt": "2022-12-21T17:24:23Z",
           "comments": []
         }
       ]
