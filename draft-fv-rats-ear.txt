@@ -5,10 +5,10 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                               Arm Limited
 Intended status: Standards Track                                 E. Voit
-Expires: 24 June 2023                                              Cisco
+Expires: 14 July 2023                                              Cisco
                                                              S. Trofimov
                                                              Arm Limited
-                                                        21 December 2022
+                                                         10 January 2023
 
 
                         EAT Attestation Results
@@ -62,11 +62,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 June 2023.
+   This Internet-Draft will expire on 14 July 2023.
 
 Copyright Notice
 
-   Copyright (c) 2022 IETF Trust and the persons identified as the
+   Copyright (c) 2023 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -93,7 +93,7 @@ Table of Contents
      4.1.  Unregistered claims
      4.2.  Registered claims
      4.3.  Choosing between registered and unregistered claims
-     4.4.  TEEP Extensions
+     4.4.  TEEP Extension
        4.4.1.  JSON Serialization
        4.4.2.  CBOR Serialization
      4.5.  Veraison Extensions
@@ -113,6 +113,7 @@ Table of Contents
    9.  References
      9.1.  Normative References
      9.2.  Informative References
+   Appendix A.  Common CDDL Types
    Acknowledgments
    Authors' Addresses
 
@@ -382,11 +383,15 @@ Table of Contents
 
 3.4.1.  Examples
 
+   The example in Figure 6 is semantically equivalent to that in
+   Figure 4.  It shows the same "contraindicated" appraisal using the
+   more compact CBOR serialization of the EAR claims-set.
+
    {
      265: "tag:github.com,2022:veraison/ear",
      1000: 96,
      1001: {
-       0: 32,
+       0: 2,
        1: 32,
        2: 96,
        3: 0,
@@ -399,6 +404,8 @@ Table of Contents
      1003: "https://veraison.example/policy/1/60a0068d",
      6: 1666529184
    }
+
+            Figure 6: CBOR claims-set: contraindicated appraisal
 
 4.  EAR Extensions
 
@@ -446,12 +453,12 @@ Table of Contents
 
 4.3.  Choosing between registered and unregistered claims
 
-   If an extension is to support functionality of a specific application
+   If an extension supports functionality of a specific application
    (e.g.  Veraison Services), its claims MAY be registered.
 
-   If an extension is to support a protocol that may be applicable
-   across multiple applications or environments (e.g., TEEP), its claims
-   SHOULD be registered.
+   If an extension supports a protocol that may be applicable across
+   multiple applications or environments (e.g., TEEP), its claims SHOULD
+   be registered.
 
    Since, in general, there is no guarantee that an application will be
    confined within an environment, it is RECOMMENDED that extension
@@ -464,7 +471,7 @@ Table of Contents
    space" and are registered as described in Section 4.2.  The original
    "private space" claims SHOULD then be deprecated by the application.
 
-4.4.  TEEP Extensions
+4.4.  TEEP Extension
 
    The TEEP protocol [I-D.ietf-teep-protocol] specifies the required
    claims that an attestation result must carry for a TAM (Trusted
@@ -490,11 +497,11 @@ Table of Contents
      ? eat.manifests => eat.manifests-type
    }>
 
-                 Figure 6: TEEP Extension (CDDL Definition)
+                 Figure 7: TEEP Extension (CDDL Definition)
 
 4.4.1.  JSON Serialization
 
-   ear.teep.claims = "ear.teep.claims"
+   ear.teep-claims = "ear.teep-claims"
 
    eat.nonce = "nonce"
    eat.ueid = "ueid"
@@ -529,8 +536,6 @@ Table of Contents
    oemid-ieee = base64-url-text ; cddl(1)-unsupported: .size 4
    oemid-random = base64-url-text ; cddl(1)-unsupported: .size 24
 
-   base64-url-text = tstr .regexp "[A-Za-z0-9_=-]+"
-
    Example:
 
    {
@@ -555,22 +560,75 @@ Table of Contents
 
 4.4.2.  CBOR Serialization
 
-   ear.teep.claims = 65000
+   ear.teep-claims = 65000
 
-   ; TODO
+   eat.nonce = 10
+   eat.ueid = 256
+   eat.oemid = 258
+   eat.hardware-model = 259
+   eat.hardware-version = 260
+   eat.manifests = 273 ; XXX provisional
+
+   eat.nonce-type = bytes .size (8..64)
+   eat.ueid-type = bytes .size (7..33)
+   eat.oemid-type = oemid-pen / oemid-ieee / oemid-random
+   eat.hardware-model-type = bytes .size (1..32)
+
+   eat.hardware-version-type = [
+     version: text
+     ? scheme: $version-scheme
+   ]
+
+   eat.manifests-type = [ + manifest-format ]
+
+   manifest-format = [
+     content-type: coap-content-format
+     content-format: bytes .cbor untagged-coswid
+   ]
+
+   coap-content-format = uint .le 65535
+   untagged-coswid = bytes ; XXX should import coswid
+
+   oemid-pen = int
+   oemid-ieee = bytes .size 3
+   oemid-random = bytes .size 16
+
+   Example:
+
+   {
+     265: "tag:github.com,2022:veraison/ear",
+     1000: 96,
+     1001: {
+       0: 2,
+       1: 2,
+       2: 2,
+       4: 2
+     },
+     1002: h'6C696665626F61746D616E',
+     1003: "https://veraison.example/policy/1/60a0068d",
+     6: 1666529184,
+     65000: {
+       10: h'948f8860d13a463e',
+       256: h'0198f50a4ff6c05861c8860d13a638ea',
+       258: 64242,
+       259: h'ee80f5a66c1fb9742999a8fdab930893',
+       260: ["1.2.5", 16384]
+     }
+   }
 
 4.5.  Veraison Extensions
 
    The Veraison verifier defines two private, application-specific
    extensions:
 
-   *  Processed Evidence:  The appraised evidence claims-set converted
-         into a JSON object.
+   ear.veraison.processed-evidence
+      The appraised evidence claims-set converted into a JSON object.
 
-   *  Verifier Added Claims:  A JSON map containing any claims about the
-         attester that are inferred by the verifier during the appraisal
-         process.  For example: the certification status associated with
-         the device, or any other endorsed attribute.
+   ear.veraison.verifier-added-claims
+      A map containing any claims about the attester that are inferred
+      by the verifier during the appraisal process.  For example: the
+      certification status associated with the device, or other endorsed
+      attributes.
 
    $$ear-extension //= (
      ear.veraison.processed-evidence =>
@@ -590,7 +648,7 @@ Table of Contents
      + ear-label => any
    }
 
-              Figure 7: Veraison Extensions (CDDL Definition)
+              Figure 8: Veraison Extensions (CDDL Definition)
 
 4.5.1.  JSON Serialization
 
@@ -898,6 +956,10 @@ Table of Contents
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/rfc/rfc2119>.
 
+   [RFC4648]  Josefsson, S., "The Base16, Base32, and Base64 Data
+              Encodings", RFC 4648, DOI 10.17487/RFC4648, October 2006,
+              <https://www.rfc-editor.org/rfc/rfc4648>.
+
    [RFC7519]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token
               (JWT)", RFC 7519, DOI 10.17487/RFC7519, May 2015,
               <https://www.rfc-editor.org/rfc/rfc7519>.
@@ -942,6 +1004,20 @@ Table of Contents
               Code: The Implementation Status Section", BCP 205,
               RFC 7942, DOI 10.17487/RFC7942, July 2016,
               <https://www.rfc-editor.org/rfc/rfc7942>.
+
+Appendix A.  Common CDDL Types
+
+   non-empty
+      A CDDL generic that can be used to ensure the presence of at least
+      one item in an object with only optional fields.
+
+   non-empty<M> = (M) .within ({ + any => any })
+
+   base64-url-text
+      string type representing a Base64 URL-encoded string (see
+      Section 5 of [RFC4648]).
+
+   base64-url-text = tstr .regexp "[A-Za-z0-9_=-]+"
 
 Acknowledgments
 
