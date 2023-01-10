@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-12-22T00:57:45.797854+00:00",
+  "timestamp": "2023-01-10T01:01:28.837322+00:00",
   "repo": "thomas-fossati/draft-ear",
   "labels": [
     {
@@ -386,6 +386,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 8,
+      "id": "PR_kwDOIe69Es5HAJYL",
+      "title": "validate all CDDL (JSON and CBOR), included examples",
+      "url": "https://github.com/thomas-fossati/draft-ear/pull/8",
+      "state": "OPEN",
+      "author": "thomas-fossati",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Signed-off-by: Thomas Fossati <thomas.fossati@arm.com>",
+      "createdAt": "2023-01-09T18:09:50Z",
+      "updatedAt": "2023-01-09T18:16:39Z",
+      "baseRepository": "thomas-fossati/draft-ear",
+      "baseRefName": "main",
+      "baseRefOid": "d871ee121f56fbed90bcd656ad7434423b821fec",
+      "headRepository": "thomas-fossati/draft-ear",
+      "headRefName": "validate",
+      "headRefOid": "88d1c1440318474519261105532ee90618eeebfc",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
