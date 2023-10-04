@@ -5,10 +5,10 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                               Arm Limited
 Intended status: Standards Track                                 E. Voit
-Expires: 22 December 2023                                          Cisco
+Expires: 6 April 2024                                              Cisco
                                                              S. Trofimov
                                                              Arm Limited
-                                                            20 June 2023
+                                                          4 October 2023
 
 
                         EAT Attestation Results
@@ -65,7 +65,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 December 2023.
+   This Internet-Draft will expire on 6 April 2024.
 
 Copyright Notice
 
@@ -111,17 +111,18 @@ Table of Contents
        6.1.2.  github.com/veraison/c-ear
        6.1.3.  github.com/veraison/rust-ear
    7.  Security Considerations
-   8.  IANA Considerations
-     8.1.   New EAT Claims
-       8.1.1.  EAR Status
-       8.1.2.  EAR Trustworthiness Vector
-       8.1.3.  EAR Raw Evidence
-       8.1.4.  EAR Appraisal Policy Identifier
-       8.1.5.  EAR Verifier Software Identifier
-       8.1.6.  EAR TEEP Claims
-   9.  References
-     9.1.  Normative References
-     9.2.  Informative References
+   8.  Privacy Considerations
+   9.  IANA Considerations
+     9.1.   New EAT Claims
+       9.1.1.  EAR Status
+       9.1.2.  EAR Trustworthiness Vector
+       9.1.3.  EAR Raw Evidence
+       9.1.4.  EAR Appraisal Policy Identifier
+       9.1.5.  EAR Verifier Software Identifier
+       9.1.6.  EAR TEEP Claims
+   10. References
+     10.1.  Normative References
+     10.2.  Informative References
    Appendix A.  Common CDDL Types
    Appendix B.  Open Policy Agent Example
    Appendix C.  Open Issues
@@ -203,7 +204,8 @@ Table of Contents
    ear.raw-evidence (optional)  The unabridged evidence submitted for
       appraisal, including any signed container/envelope.  This field
       may be consumed by other Verifiers in multi-stage verification
-      scenarios or by auditors.
+      scenarios or by auditors.  There are privacy considerations
+      associated with this claim.  See Section 8.
 
    eat.submods (mandatory)  A submodule map (Section 4.2.18 of
       [I-D.ietf-rats-eat]) holding one EAR-appraisal for each separately
@@ -217,8 +219,10 @@ Table of Contents
       for the details about the contents of an EAR-appraisal.
 
    eat.nonce (optional)  A user supplied nonce that is echoed by the
-      verifier to provide freshness.  See Section 4.1 of
-      [I-D.ietf-rats-eat].
+      verifier to provide freshness.  The nonce is a sequence of bytes
+      between 8 and 64 bytes long.  When serialized as JWT, the nonce
+      must be base64 encoded, resulting in a string between 12 and 88
+      bytes long.  See Section 4.1 of [I-D.ietf-rats-eat].
 
    $$ear-extension (optional)  Any registered or unregistered extension.
       An EAR extension MUST be a map.  See Section 4 for further
@@ -775,7 +779,8 @@ Table of Contents
 
    ear.veraison.annotated-evidence
       JSON representation of the evidence claims-set, including any
-      annotations provided by the Project Veraison verifier.
+      annotations provided by the Project Veraison verifier.  There are
+      privacy considerations associated with this claim.  See Section 8.
 
    ear.veraison.policy-claims
       any extra claims added by the policy engine in the Project
@@ -1064,9 +1069,30 @@ Table of Contents
 
    TODO Security
 
-8.  IANA Considerations
+8.  Privacy Considerations
 
-8.1.   New EAT Claims
+   EAR is designed to expose as little identifying information as
+   possible about the attester.  However, certain EAR claims have direct
+   privacy implications.  Implementations should therefore allow
+   applying privacy-preserving techniques to those claims, for example
+   allowing their redaction, anonymisation or outright removal.
+   Specifically:
+
+   *  It SHOULD be possible to disable inclusion of the optional
+      ear.raw-evidence claim
+
+   *  It SHOULD be possible to disable inclusion of the optional
+      ear.veraison.annotated-evidence claim
+
+   *  It SHOULD be possible to allow redaction, anonymisation or removal
+      of specific claims from the ear.veraison.annotated-evidence object
+
+   EAR is an EAT, therefore the privacy considerations in Section 8 of
+   [I-D.ietf-rats-eat] apply.
+
+9.  IANA Considerations
+
+9.1.   New EAT Claims
 
    This specification adds the following values to the "JSON Web Token
    Claims" registry [IANA.jwt] and the "CBOR Web Token Claims" registry
@@ -1081,7 +1107,7 @@ Table of Contents
    JWT registry.  The "JWT Claim Name" is equivalent to the "Claim Name"
    in the JWT registry.
 
-8.1.1.  EAR Status
+9.1.1.  EAR Status
 
    *  Claim Name: ear.status
 
@@ -1097,7 +1123,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3.2 of RFCthis
 
-8.1.2.  EAR Trustworthiness Vector
+9.1.2.  EAR Trustworthiness Vector
 
    *  Claim Name: ear.trustworthiness-vector
 
@@ -1113,7 +1139,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3.2.1 of RFCthis
 
-8.1.3.  EAR Raw Evidence
+9.1.3.  EAR Raw Evidence
 
    *  Claim Name: ear.raw-evidence
 
@@ -1129,7 +1155,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3 of RFCthis
 
-8.1.4.  EAR Appraisal Policy Identifier
+9.1.4.  EAR Appraisal Policy Identifier
 
    *  Claim Name: ear.appraisal-policy-id
 
@@ -1145,7 +1171,7 @@ Table of Contents
 
    *  Specification Document(s): Section 3.2 of RFCthis
 
-8.1.5.  EAR Verifier Software Identifier
+9.1.5.  EAR Verifier Software Identifier
 
    *  Claim Name: ear.verifier-id
 
@@ -1161,42 +1187,43 @@ Table of Contents
 
    *  Specification Document(s): Section 3.1 of RFCthis
 
-8.1.6.  EAR TEEP Claims
+9.1.6.  EAR TEEP Claims
 
    TODO
 
-9.  References
+10.  References
 
-9.1.  Normative References
+10.1.  Normative References
 
    [I-D.ietf-rats-ar4si]
               Voit, E., Birkholz, H., Hardjono, T., Fossati, T., and V.
               Scarlata, "Attestation Results for Secure Interactions",
               Work in Progress, Internet-Draft, draft-ietf-rats-ar4si-
-              04, 2 March 2023, <https://datatracker.ietf.org/doc/html/
-              draft-ietf-rats-ar4si-04>.
+              05, 30 August 2023,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-rats-
+              ar4si-05>.
 
    [I-D.ietf-rats-eat]
               Lundblade, L., Mandyam, G., O'Donoghue, J., and C.
               Wallace, "The Entity Attestation Token (EAT)", Work in
-              Progress, Internet-Draft, draft-ietf-rats-eat-20, 13 June
+              Progress, Internet-Draft, draft-ietf-rats-eat-21, 30 June
               2023, <https://datatracker.ietf.org/doc/html/draft-ietf-
-              rats-eat-20>.
+              rats-eat-21>.
 
    [I-D.ietf-rats-eat-media-type]
               Lundblade, L., Birkholz, H., and T. Fossati, "EAT Media
               Types", Work in Progress, Internet-Draft, draft-ietf-rats-
-              eat-media-type-02, 10 March 2023,
+              eat-media-type-04, 23 July 2023,
               <https://datatracker.ietf.org/doc/html/draft-ietf-rats-
-              eat-media-type-02>.
+              eat-media-type-04>.
 
    [I-D.ietf-teep-protocol]
               Tschofenig, H., Pei, M., Wheeler, D. M., Thaler, D., and
               A. Tsukamoto, "Trusted Execution Environment Provisioning
               (TEEP) Protocol", Work in Progress, Internet-Draft, draft-
-              ietf-teep-protocol-14, 19 June 2023,
+              ietf-teep-protocol-16, 5 September 2023,
               <https://datatracker.ietf.org/doc/html/draft-ietf-teep-
-              protocol-14>.
+              protocol-16>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -1241,13 +1268,13 @@ Table of Contents
               DOI 10.17487/RFC9052, August 2022,
               <https://www.rfc-editor.org/rfc/rfc9052>.
 
-9.2.  Informative References
+10.2.  Informative References
 
    [IANA.cwt] IANA, "CBOR Web Token (CWT) Claims",
-              <https://www.iana.org/assignments/cwt>.
+              <http://www.iana.org/assignments/cwt>.
 
    [IANA.jwt] IANA, "JSON Web Token (JWT)",
-              <https://www.iana.org/assignments/jwt>.
+              <http://www.iana.org/assignments/jwt>.
 
    [RFC4151]  Kindberg, T. and S. Hawke, "The 'tag' URI Scheme",
               RFC 4151, DOI 10.17487/RFC4151, October 2005,
