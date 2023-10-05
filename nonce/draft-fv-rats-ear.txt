@@ -5,10 +5,10 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                               Arm Limited
 Intended status: Standards Track                                 E. Voit
-Expires: 6 April 2024                                              Cisco
+Expires: 7 April 2024                                              Cisco
                                                              S. Trofimov
                                                              Arm Limited
-                                                          4 October 2023
+                                                          5 October 2023
 
 
                         EAT Attestation Results
@@ -65,7 +65,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 April 2024.
+   This Internet-Draft will expire on 7 April 2024.
 
 Copyright Notice
 
@@ -221,7 +221,7 @@ Table of Contents
    eat.nonce (optional)  A user supplied nonce that is echoed by the
       verifier to provide freshness.  The nonce is a sequence of bytes
       between 8 and 64 bytes long.  When serialized as JWT, the nonce
-      must be base64 encoded, resulting in a string between 12 and 88
+      MUST be base64 encoded, resulting in a string between 12 and 88
       bytes long.  See Section 4.1 of [I-D.ietf-rats-eat].
 
    $$ear-extension (optional)  Any registered or unregistered extension.
