@@ -5,10 +5,10 @@
 Remote ATtestation ProcedureS                                 T. Fossati
 Internet-Draft                                               Arm Limited
 Intended status: Standards Track                                 E. Voit
-Expires: 6 January 2024                                            Cisco
+Expires: 7 April 2024                                              Cisco
                                                              S. Trofimov
                                                              Arm Limited
-                                                             5 July 2023
+                                                          5 October 2023
 
 
                         EAT Attestation Results
@@ -65,7 +65,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 January 2024.
+   This Internet-Draft will expire on 7 April 2024.
 
 Copyright Notice
 
@@ -219,8 +219,10 @@ Table of Contents
       for the details about the contents of an EAR-appraisal.
 
    eat.nonce (optional)  A user supplied nonce that is echoed by the
-      verifier to provide freshness.  See Section 4.1 of
-      [I-D.ietf-rats-eat].
+      verifier to provide freshness.  The nonce is a sequence of bytes
+      between 8 and 64 bytes long.  When serialized as JWT, the nonce
+      MUST be base64 encoded, resulting in a string between 12 and 88
+      bytes long.  See Section 4.1 of [I-D.ietf-rats-eat].
 
    $$ear-extension (optional)  Any registered or unregistered extension.
       An EAR extension MUST be a map.  See Section 4 for further
@@ -372,7 +374,7 @@ Table of Contents
    build = "build"
 
    ; EAT
-   eat.nonce-type = text .size (10..74)
+   eat.nonce-type = base64-url-text .size (12..88)
 
 3.3.1.  Examples
 
@@ -1197,8 +1199,9 @@ Table of Contents
               Voit, E., Birkholz, H., Hardjono, T., Fossati, T., and V.
               Scarlata, "Attestation Results for Secure Interactions",
               Work in Progress, Internet-Draft, draft-ietf-rats-ar4si-
-              04, 2 March 2023, <https://datatracker.ietf.org/doc/html/
-              draft-ietf-rats-ar4si-04>.
+              05, 30 August 2023,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-rats-
+              ar4si-05>.
 
    [I-D.ietf-rats-eat]
               Lundblade, L., Mandyam, G., O'Donoghue, J., and C.
@@ -1210,17 +1213,17 @@ Table of Contents
    [I-D.ietf-rats-eat-media-type]
               Lundblade, L., Birkholz, H., and T. Fossati, "EAT Media
               Types", Work in Progress, Internet-Draft, draft-ietf-rats-
-              eat-media-type-03, 4 July 2023,
+              eat-media-type-04, 23 July 2023,
               <https://datatracker.ietf.org/doc/html/draft-ietf-rats-
-              eat-media-type-03>.
+              eat-media-type-04>.
 
    [I-D.ietf-teep-protocol]
               Tschofenig, H., Pei, M., Wheeler, D. M., Thaler, D., and
               A. Tsukamoto, "Trusted Execution Environment Provisioning
               (TEEP) Protocol", Work in Progress, Internet-Draft, draft-
-              ietf-teep-protocol-15, 3 July 2023,
+              ietf-teep-protocol-16, 5 September 2023,
               <https://datatracker.ietf.org/doc/html/draft-ietf-teep-
-              protocol-15>.
+              protocol-16>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -1268,10 +1271,10 @@ Table of Contents
 10.2.  Informative References
 
    [IANA.cwt] IANA, "CBOR Web Token (CWT) Claims",
-              <https://www.iana.org/assignments/cwt>.
+              <http://www.iana.org/assignments/cwt>.
 
    [IANA.jwt] IANA, "JSON Web Token (JWT)",
-              <https://www.iana.org/assignments/jwt>.
+              <http://www.iana.org/assignments/jwt>.
 
    [RFC4151]  Kindberg, T. and S. Hawke, "The 'tag' URI Scheme",
               RFC 4151, DOI 10.17487/RFC4151, October 2005,
