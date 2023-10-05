@@ -374,7 +374,7 @@ Table of Contents
    build = "build"
 
    ; EAT
-   eat.nonce-type = text .size (10..74)
+   eat.nonce-type = base64-url-text .size (12..88)
 
 3.3.1.  Examples
 
