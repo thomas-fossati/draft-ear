@@ -129,6 +129,7 @@ Table of Contents
    Appendix D.  Document History
      D.1.  draft-fv-rats-ear-00
      D.2.  draft-fv-rats-ear-01
+     D.3.  draft-fv-rats-ear-02
    Acknowledgments
    Authors' Addresses
 
@@ -1423,6 +1424,10 @@ D.2.  draft-fv-rats-ear-01
    *  OPA policy example
 
    *  add rust-ear crate to the implementation status section
+
+D.3.  draft-fv-rats-ear-02
+
+   *  align JWT and CWT representations of eat_nonce
 
 Acknowledgments
 
