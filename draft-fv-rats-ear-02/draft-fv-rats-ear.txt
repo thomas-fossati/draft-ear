@@ -3,7 +3,7 @@
 
 
 Remote ATtestation ProcedureS                                 T. Fossati
-Internet-Draft                                               Arm Limited
+Internet-Draft                                                    Linaro
 Intended status: Standards Track                                 E. Voit
 Expires: 25 April 2024                                             Cisco
                                                              S. Trofimov
@@ -128,6 +128,8 @@ Table of Contents
    Appendix C.  Open Issues
    Appendix D.  Document History
      D.1.  draft-fv-rats-ear-00
+     D.2.  draft-fv-rats-ear-01
+     D.3.  draft-fv-rats-ear-02
    Acknowledgments
    Authors' Addresses
 
@@ -1415,6 +1417,18 @@ D.1.  draft-fv-rats-ear-00
 
    Initial release.
 
+D.2.  draft-fv-rats-ear-01
+
+   *  privacy considerations
+
+   *  OPA policy example
+
+   *  add rust-ear crate to the implementation status section
+
+D.3.  draft-fv-rats-ear-02
+
+   *  align JWT and CWT representations of eat_nonce
+
 Acknowledgments
 
    Many thanks to Dave Thaler, Greg Kostal, Simon Frost, Yogesh
@@ -1424,8 +1438,8 @@ Acknowledgments
 Authors' Addresses
 
    Thomas Fossati
-   Arm Limited
-   Email: thomas.fossati@arm.com
+   Linaro
+   Email: thomas.fossati@linaro.org
 
 
    Eric Voit
