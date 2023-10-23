@@ -3,7 +3,7 @@
 
 
 Remote ATtestation ProcedureS                                 T. Fossati
-Internet-Draft                                               Arm Limited
+Internet-Draft                                                    Linaro
 Intended status: Standards Track                                 E. Voit
 Expires: 25 April 2024                                             Cisco
                                                              S. Trofimov
@@ -1438,8 +1438,8 @@ Acknowledgments
 Authors' Addresses
 
    Thomas Fossati
-   Arm Limited
-   Email: thomas.fossati@arm.com
+   Linaro
+   Email: thomas.fossati@linaro.org
 
 
    Eric Voit
